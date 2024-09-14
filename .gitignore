@@ -5,3 +5,5 @@ Library
 Temp
 Installer
 *.spp
+.vs/ugpa/FileContentIndex
+Assembly-CSharp.csproj
