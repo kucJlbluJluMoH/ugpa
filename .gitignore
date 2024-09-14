@@ -7,3 +7,5 @@ Installer
 *.spp
 .vs/ugpa/FileContentIndex
 Assembly-CSharp.csproj
+.vs/ugpa/v17
+UserSettings/EditorUserSettings.asset
