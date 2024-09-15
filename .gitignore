@@ -9,3 +9,5 @@ Installer
 Assembly-CSharp.csproj
 .vs/ugpa/v17
 UserSettings/EditorUserSettings.asset
+ugpa.sln
+.idea
