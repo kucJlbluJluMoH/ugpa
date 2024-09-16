@@ -26,5 +26,6 @@ public class FpsCounter : MonoBehaviour
             timePassed -= pollingTime;
         }
     }
+    
 
 }

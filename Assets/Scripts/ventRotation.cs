@@ -7,7 +7,11 @@ public class ventRotation : MonoBehaviour
 
 
     // Скорость вращения пропеллеров
-    public float rotationSpeed = 1000f;
+    private float rotationSpeed = 1000f;
+    private void Start()
+    {
+        rotationSpeed = Random.Range(100, 1500);
+    }
     void Update()
     {
         // Вращаем пропеллер вокруг оси Y
