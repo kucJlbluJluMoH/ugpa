@@ -9230,7 +9230,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  jumpHeight: 1
+  jumpHeight: 0.5
   gravity: -9.81
   dashSpeed: 20
   dashDuration: 0.1
@@ -18469,7 +18469,7 @@ PrefabInstance:
     - target: {fileID: 8072336391487816333, guid: 01de8de5250d4a846adc3c70c5639c43,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.0857391
+      value: -2.17
       objectReference: {fileID: 0}
     - target: {fileID: 8072336391487816333, guid: 01de8de5250d4a846adc3c70c5639c43,
         type: 3}

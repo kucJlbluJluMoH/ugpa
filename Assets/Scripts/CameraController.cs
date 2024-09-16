@@ -43,10 +43,11 @@ public class CameraController : MonoBehaviour
 
             float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
             float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
-
+            mouseX += currentRecoil.x;
+            mouseY += currentRecoil.y;
             // Применяем разницу во времени к вращению
-            yRotation += mouseX * deltaTime + currentRecoil.x;
-            xRotation -= mouseY * deltaTime + currentRecoil.y;
+            yRotation += mouseX * deltaTime;
+            xRotation -= mouseY * deltaTime;
 
             // Применяем отдачу с учетом deltaTime
             //xRotation -= currentRecoil.y * deltaTime;

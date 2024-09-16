@@ -191,56 +191,61 @@ public class BlasterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-      
-        if(Input.GetMouseButtonDown(0)&&currentstvol==0)
+        if (!cameraController.IsPaused)
         {
-            Shoot();
 
-        }
-        if(Input.GetMouseButton(0))
-        {
-            if (currentstvol == 0 && delay<=0)
+            if (Input.GetMouseButtonDown(0) && currentstvol == 0)
             {
                 Shoot();
+
             }
-            else if(currentstvol == 1 && delayBIGSTVOL <=0) 
+            else
             {
-                VFX_fire.SetActive(true);
-                isHoldingLKM = true;
+                if (Input.GetMouseButton(0))
+                {
+                    if (currentstvol == 0 && delay <= 0)
+                    {
+                        Shoot();
+                    }
+                    else if (currentstvol == 1 && delayBIGSTVOL <= 0)
+                    {
+                        VFX_fire.SetActive(true);
+                        isHoldingLKM = true;
+                    }
+                }
+
+                else
+                {
+                    if (isHoldingLKM && currentstvol == 1)
+                    {
+                        Shoot();
+                    }
+                    isHoldingLKM = false;
+                    VFX_fire.transform.position = VFX_fireShow.position;
+                    VFX_fire.SetActive(false);
+                    multiplier = 0.1f;
                 }
             }
-        
-        else
-        {
-            if(isHoldingLKM && currentstvol==1)
+            if (Input.GetMouseButton(1))
             {
-                Shoot();
+                isAiming = true;
+                transform.position = Vector3.Lerp(transform.position, syncAimedTr.position, Time.deltaTime * aimSpeed);
             }
-            isHoldingLKM = false;
-            VFX_fire.transform.position = VFX_fireShow.position;
-            VFX_fire.SetActive(false);
-            multiplier = 0.1f;
-        }
-        if(Input.GetMouseButton(1))
-        {
-            isAiming = true;
-            transform.position = Vector3.Lerp(transform.position, syncAimedTr.position, Time.deltaTime * aimSpeed);
-        }
-        else
-        {
-            transform.position = Vector3.Lerp(transform.position, syncIdleTr.position, Time.deltaTime * aimSpeed);
-            isAiming = false;
-        }
+            else
+            {
+                transform.position = Vector3.Lerp(transform.position, syncIdleTr.position, Time.deltaTime * aimSpeed);
+                isAiming = false;
+            }
 
-        if(Input.GetButtonDown("SwitchStvol") && !isHoldingLKM)
-        {
-            anim.SetTrigger("Change");
-            delay = 0.5f;
-            currentstvol = Mathf.Abs(currentstvol - 1);
+            if (Input.GetButtonDown("SwitchStvol") && !isHoldingLKM)
+            {
+                anim.SetTrigger("Change");
+                delay = 0.5f;
+                currentstvol = Mathf.Abs(currentstvol - 1);
 
+            }
         }
     }
-   
 
 }
    

@@ -43,7 +43,7 @@ public class EnemyController : MonoBehaviour
     private int MaxCountOfDurationOfSuperAttack;
     private bool ForceStopSuper;
 
-
+    private bool HasSeenPlayer = false;
     private Vector3 previousPosition;
     private Transform player;
     private PlayerMovement playerMovement;
@@ -173,7 +173,11 @@ public class EnemyController : MonoBehaviour
         else
         {
             CheckIsMoving();
-            if (IsInView() &&!IsSuperAttacking&&!IsWaitingAfterSuperAttack&&CountOfTimeSuperAttackTimeToContinue>=MaxCountOfTimeSuperAttackTimeToContinue)
+            if(!HasSeenPlayer)
+            {
+               HasSeenPlayer = IsInView();
+            }
+            if (HasSeenPlayer &&!IsSuperAttacking&&!IsWaitingAfterSuperAttack&&CountOfTimeSuperAttackTimeToContinue>=MaxCountOfTimeSuperAttackTimeToContinue)
             {
                 
                 float distance = Vector3.Distance(eyesTransform.position, player.position);
