@@ -1019,7 +1019,7 @@ MonoBehaviour:
   Speed: 4.8
   AttackRangeToDamage: 1.3
   AttackCooldown: 1.5
-  AttackAnimDamageDelay: 0.1
+  AttackAnimDamageDelay: 0.5
   SuperDamage: 40
   SuperSpeed: 80
   SuperAngularSpeed: 80000

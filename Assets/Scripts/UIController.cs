@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class UIController : MonoBehaviour
 {
+    public GameObject blurUI;
     public GameObject DedEffectobj;
     public Image DeadEffect; // ������ �� �����������
     public GameObject deadScreen; // ������ �� ������ DeadScreen
@@ -97,7 +98,7 @@ public class UIController : MonoBehaviour
                 if (!isPanelActive)
                 {
                     Time.timeScale = 1;
-
+                    blurUI.SetActive(false);
                     camera.mouseSensitivity = slider.value;
                     camera.IsPaused = false;
                     camera.LockCursor();
@@ -107,6 +108,7 @@ public class UIController : MonoBehaviour
                 {
                     camera.IsPaused = true;
                     Time.timeScale = 0;
+                    blurUI.SetActive(true);
                     camera.UnlockCursor();
                 }
             }

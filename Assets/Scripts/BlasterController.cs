@@ -89,7 +89,7 @@ public class BlasterController : MonoBehaviour
             }
             Vector3 spreadVector = new Vector3(x, y, 0);
             Vector3 dirwithspread = spawnBullet.forward + spreadVector;
-            // Создаем пулю и задаем её начальную ориентацию как у объекта spawnBullet
+            // РЎРѕР·РґР°РµРј РїСѓР»СЋ Рё Р·Р°РґР°РµРј РµС‘ РЅР°С‡Р°Р»СЊРЅСѓСЋ РѕСЂРёРµРЅС‚Р°С†РёСЋ РєР°Рє Сѓ РѕР±СЉРµРєС‚Р° spawnBullet
             GameObject currentBullet = Instantiate(BigBullet, spawnBullet.position, spawnBullet.rotation);
             currentBullet.GetComponent<Rigidbody>().AddForce(dirwithspread.normalized * shootBigForce, ForceMode.Impulse);
             anim.SetTrigger("DecreaseEmis");
@@ -116,7 +116,7 @@ public class BlasterController : MonoBehaviour
            
             Vector3 spreadVector = new Vector3(x, y, 0);
             Vector3 dirwithspread = spawnBullet.forward + spreadVector;
-            // Создаем пулю и задаем её начальную ориентацию как у объекта spawnBullet
+            // РЎРѕР·РґР°РµРј РїСѓР»СЋ Рё Р·Р°РґР°РµРј РµС‘ РЅР°С‡Р°Р»СЊРЅСѓСЋ РѕСЂРёРµРЅС‚Р°С†РёСЋ РєР°Рє Сѓ РѕР±СЉРµРєС‚Р° spawnBullet
             GameObject currentBullet = Instantiate(SmallBullet, spawnBullet.position, spawnBullet.rotation);
             currentBullet.GetComponent<Rigidbody>().AddForce(dirwithspread.normalized * shootForce, ForceMode.Impulse);
             delay = delayAfterSmallShot;
