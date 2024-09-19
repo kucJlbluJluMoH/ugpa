@@ -6,6 +6,8 @@ public class EnemyController : MonoBehaviour
     public float HP;
     public Transform eyesTransform;
     public float MoveThreshold = 0.01f;
+    public float RotationThreshold = 1f; // Порог для изменения поворота (настраиваемый)
+
     [Header("Normal Attack")]
     public float Damage;
     public float Speed;
@@ -42,15 +44,26 @@ public class EnemyController : MonoBehaviour
     private int CountOfDurationOfSuperAttack;
     private int MaxCountOfDurationOfSuperAttack;
     private bool ForceStopSuper;
-
+    [Header("Audio")]
+    public AudioSource ridingAudioSource; // АудиоИсточник для воспроизведения
+    public AudioSource audioSource; // АудиоИсточник для воспроизведения
+    public AudioClip riding;
+    public AudioClip[] audioClips;
+    private bool isStoppingRiding = false;
+    private bool isStartingRiding = true;
+    
+    
     private bool HasSeenPlayer = false;
     private Vector3 previousPosition;
+    private Quaternion previousRotation; // Хранит предыдущий поворот
     private Transform player;
     private PlayerMovement playerMovement;
     private NavMeshAgent agent;
     private Animator animator;
+    private Developermenu _developermenu;
     void Start()
     {
+        _developermenu = GameObject.Find("DeveloperMenuController").GetComponent<Developermenu>();
         MaxCountOfDurationOfSuperAttack = (int)(MaxDurationOfSuperAttack / 0.1f);
         MaxCountOfTimeSuperAttackTimeToContinue = (int)(SuperAttackTimeToContinue / 0.1f);
         MaxCountOfVisiblity = (int)(SuperAttackTimeToStayIn / 0.1f);
@@ -61,6 +74,59 @@ public class EnemyController : MonoBehaviour
         StartCoroutine(SuperAttackVisiblityCheck());
         StartCoroutine(CheckDurationOfSuperAttacK());
     }
+    public void PlayTrack(int trackIndex)
+    {
+        if (trackIndex >= 0 && trackIndex < audioClips.Length)
+        {
+            audioSource.clip = audioClips[trackIndex];
+            audioSource.Play();
+        }
+    }
+
+    // Затухание аудио
+    public IEnumerator FadeOut(float duration)
+    {
+        float startVolume = audioSource.volume;
+
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            audioSource.volume = Mathf.Lerp(startVolume, 0, t / duration);
+            yield return null;
+        }
+
+        audioSource.Stop();
+        audioSource.volume = startVolume; // Восстановить громкость
+    }
+    public IEnumerator RidingSmoothStop(float duration)
+    {
+        float startVolume = ridingAudioSource.volume;
+
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            ridingAudioSource.volume = Mathf.Lerp(startVolume, 0, t / duration);
+            yield return null;
+        }
+
+        ridingAudioSource.Stop();
+        ridingAudioSource.volume = startVolume; // Восстановить громкость
+    }
+    public IEnumerator RidingSmoothStart(float duration)
+    {
+        ridingAudioSource.clip = riding;
+        float targetVolume = 0.05f;  // Целевая громкость
+        ridingAudioSource.volume = 0; // Установить громкость в 0 в начале;
+        ridingAudioSource.Play();
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            ridingAudioSource.volume = Mathf.Lerp(0, targetVolume, t / duration);
+            yield return null;
+        }
+
+        ridingAudioSource.volume = targetVolume; // Убедитесь, что громкость устанавливается на целевое значение
+        ; // Запустить аудио, если оно еще не играет
+    }
+    
+
     private IEnumerator AttackAnimDamageTimer()
     {
         yield return new WaitForSeconds(AttackAnimDamageDelay);
@@ -154,24 +220,59 @@ public class EnemyController : MonoBehaviour
     private void CheckIsMoving()
     {
         Vector3 currentPosition = transform.position;
-        if (Vector3.Distance(currentPosition, previousPosition) > MoveThreshold)
+        Quaternion currentRotation = transform.rotation; // Получаем текущий поворот
+
+        // Проверяем, изменилось ли положение или поворот
+        bool hasMoved = Vector3.Distance(currentPosition, previousPosition) > MoveThreshold;
+        bool hasRotated = Quaternion.Angle(currentRotation, previousRotation) > RotationThreshold; // Порог для поворота
+
+        if (hasMoved | hasRotated)
         {
             animator.SetBool("Riding", true);
+        
+            if (!isStartingRiding)
+            {
+                StopCoroutine(RidingSmoothStop(0.1f));
+                StartCoroutine(RidingSmoothStart(0.1f));
+
+                isStartingRiding = true;
+                isStoppingRiding = false;
+            }
         }
         else
         {
             animator.SetBool("Riding", false);
+        
+            if (!isStoppingRiding)
+            {
+                StopCoroutine(RidingSmoothStart(0.1f));
+                isStoppingRiding = true;
+                isStartingRiding = false;
+                StartCoroutine(RidingSmoothStop(0.1f));
+            }
         }
+
+        // Обновляем предыдущие значения
         previousPosition = currentPosition;
+        previousRotation = currentRotation; // Обновляем предыдущий поворот
+    }
+
+    public void TakeDamageEnemy(float damage)
+    {
+        HasSeenPlayer = true;
+        HP -= damage;
     }
     void Update()
     {
-        if (HP <= 0)
+        if (HP <= 0 | _developermenu.isKilledEverybody)
         {
             Destroy(gameObject);
         }
         else
         {
+            if(!_developermenu.isFreezed)
+            {
+                agent.isStopped = false;
             CheckIsMoving();
             if(!HasSeenPlayer)
             {
@@ -190,6 +291,7 @@ public class EnemyController : MonoBehaviour
                     if(!IsDelayAfterAttack)
                     {
                         animator.SetTrigger("Attack");
+                        PlayTrack(0);
                         IsDelayAfterAttack = true;
                         CountOfTimeSuperAttackTimeToContinue = 0;
                         StartCoroutine(AttackAnimDamageTimer());
@@ -209,6 +311,17 @@ public class EnemyController : MonoBehaviour
                     agent.SetDestination(player.position);
                 }
             }
+
+            if (agent.avoidancePriority == 100)
+            {
+                if ((Vector3.Distance(gameObject.transform.position, player.position) < SuperAttackRangeToDamage)&&IsInView())
+                {
+                    Debug.Log("updateLocate");
+                    ForceStopSuper = true;
+                    agent.isStopped = true;
+                }
+            }
+
             if (IsSuperAttacking && IsReadyToMove)
             {
                 agent.isStopped = false;
@@ -218,18 +331,21 @@ public class EnemyController : MonoBehaviour
                     //SavedPlayerTransform = player.transform;
                     IsWaitingToSaveTransform = false;
                 }
-                Vector3 currentPosition1 =gameObject.transform.position;
+
+                Vector3 currentPosition1 = gameObject.transform.position;
                 if (Vector3.Distance(currentPosition1, SavedPlayerPostion) < SuperMovingThreshold)
                 {
                     IsGotToSavedPlayerTransform = true;
                 }
-                if(ForceStopSuper)
+
+                if (ForceStopSuper)
                 {
                     IsGotToSavedPlayerTransform = true;
                 }
+
                 if (!IsGotToSavedPlayerTransform)
                 {
-                    
+
                     animator.SetBool("Rotating", true);
                     agent.avoidancePriority = 100;
                     agent.acceleration = SuperAcceleration;
@@ -240,24 +356,28 @@ public class EnemyController : MonoBehaviour
                 else
                 {
                     animator.SetBool("Rotating", false);
-                    Debug.Log("stopMove");
                     IsReadyToMove = false;
                     IsWaitingAfterSuperAttack = true;
-                    IsSuperAttacking = false;   
+                    IsSuperAttacking = false;
                     IsCoolDownSuperAttack = true;
                     StartCoroutine(SuperAttackCoolDown());
                     animator.SetTrigger("AfterSuper");
                     CountOfTimeSuperAttackTimeToContinue = 0;
-                    if ((Vector3.Distance(gameObject.transform.position, player.position) < SuperAttackRangeToDamage)&&IsInView())
+                    if ((Vector3.Distance(gameObject.transform.position, player.position) < SuperAttackRangeToDamage) &&
+                        IsInView())
                     {
                         Debug.Log("Popal");
                         playerMovement.TakeDamaage(SuperDamage);
                         playerMovement.Fall();
-                       
-                        
+
+
                     }
                 }
-         
+            }
+            }
+            else
+            {
+                agent.isStopped = true;
             }
         }
     }
@@ -273,5 +393,4 @@ public class EnemyController : MonoBehaviour
         }
         return true;
     }
-
 }

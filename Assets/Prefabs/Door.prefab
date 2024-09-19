@@ -394,7 +394,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a9cca9ef27ac1846883c654a1c51707, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DoorID: 0
+  DoorID: -1
+  Open: {fileID: 8300000, guid: 4ed076205cdab2948bfa4ac0c506c4c6, type: 3}
+  Close: {fileID: 8300000, guid: ef7e77731ba0a7f42b95a4ed2689cf09, type: 3}
 --- !u!82 &4109365224559511751
 AudioSource:
   m_ObjectHideFlags: 0
@@ -407,7 +409,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: c9460a8e2193a0242bf6f0253b66dd3f, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 0
   Mute: 0

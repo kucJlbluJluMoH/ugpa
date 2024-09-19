@@ -1,6 +1,7 @@
 using UnityEngine;
 public class CameraController : MonoBehaviour
 {
+    
     public LayerMask ignoreLayer;
     public float raycastDistance = 3f;
     public bool IsPaused = false;
@@ -36,8 +37,6 @@ public class CameraController : MonoBehaviour
 
         if (!IsPaused)
         {
-
-
             // ¬ычисл€ем разницу во времени между кадрами
             float deltaTime = Time.deltaTime;
 

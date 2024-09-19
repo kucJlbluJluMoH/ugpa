@@ -1,10 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MiniGamesSwitcher : MonoBehaviour
 {
+    public CameraController cameraController;
+    public bool isInGame = false;
+    public bool isWaitingAction;
     public GameObject blurUI;
+    public GameObject gameCanvas;
     public GameObject miniGame0;
     public GameObject miniGame1;
     public GameObject miniGame2;
@@ -22,12 +27,13 @@ public class MiniGamesSwitcher : MonoBehaviour
     public GameObject miniGame14;
     public GameObject miniGame15;
     public GameObject miniGame16;
-
-    private List<GameObject> miniGames;
-
-    void Start()
+    public int WaitingMiniGameID=-1;
+    public int PassedMiniGameID=-1;
+    public int MaxIdOfOppenedDoor = -1;
+    private List<GameObject> _miniGames;
+     void Start()
     {
-        miniGames = new List<GameObject>()
+        _miniGames = new List<GameObject>()
         {
             miniGame0,
             miniGame1,
@@ -48,19 +54,34 @@ public class MiniGamesSwitcher : MonoBehaviour
             miniGame16
         };
         HideMiniGames(); // Initially hide all mini-games
-        ShowMiniGame(0);
+
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            HideMiniGames();
+            isWaitingAction = false;
+        }
     }
 
     public void ShowMiniGame(int gameIndex)
     {
+        WaitingMiniGameID = gameIndex;
         // Hide all mini-games
         HideMiniGames();
+        cameraController.UnlockCursor();
+        cameraController.IsPaused = true;
+        isInGame = true;
+        isWaitingAction = true;
+        gameCanvas.SetActive(false);
         blurUI.SetActive(true);
         // Ensure the index is within bounds
-        if (gameIndex >= 0 && gameIndex < miniGames.Count)
+        if (gameIndex >= 0 && gameIndex < _miniGames.Count)
         {
             // Show the specified mini-game
-            miniGames[gameIndex].SetActive(true);
+            _miniGames[gameIndex].SetActive(true);
         }
         else
         {
@@ -70,10 +91,20 @@ public class MiniGamesSwitcher : MonoBehaviour
     
     public void HideMiniGames()
     {
+        
+        
+        cameraController.LockCursor();
+        cameraController.IsPaused = false;
+        isInGame = false;
+        gameCanvas.SetActive(true);
+        isWaitingAction = false;
         // Hide all mini-game GameObjects
-        foreach (var miniGame in miniGames)
+        foreach (var miniGame in _miniGames)
         {
-            miniGame.SetActive(false);
+            if (miniGame != null)
+            {
+                miniGame.SetActive(false);
+            }
         }
         blurUI.SetActive(false);
     }

@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class UIController : MonoBehaviour
 {
+    public MiniGamesSwitcher miniGamesSwitcher;
     public GameObject blurUI;
     public GameObject DedEffectobj;
     public Image DeadEffect; // ������ �� �����������
@@ -83,7 +84,7 @@ public class UIController : MonoBehaviour
                 deadScreen2.SetActive(true);
                 camera.UnlockCursor();
                 Time.timeScale = 0;
-                
+
             }
         }
         else
@@ -92,24 +93,31 @@ public class UIController : MonoBehaviour
             {
                 //setGraphics.quality.value = currentGraphicIndex;
                 currentGraphicIndex = setGraphics.quality.value;
-                isPanelActive = !isPanelActive;
-                PauseMenu.SetActive(isPanelActive);
-                crosshair.SetActive(!isPanelActive);
-                if (!isPanelActive)
+                if (!miniGamesSwitcher.isInGame)
                 {
-                    Time.timeScale = 1;
-                    blurUI.SetActive(false);
-                    camera.mouseSensitivity = slider.value;
-                    camera.IsPaused = false;
-                    camera.LockCursor();
-                    
+                    isPanelActive = !isPanelActive;
+                    PauseMenu.SetActive(isPanelActive);
+                    crosshair.SetActive(!isPanelActive);
+                    if (!isPanelActive)
+                    {
+                        Time.timeScale = 1;
+                        blurUI.SetActive(false);
+                        camera.mouseSensitivity = slider.value;
+                        camera.IsPaused = false;
+                        camera.LockCursor();
+
+                    }
+                    else
+                    {
+                        camera.IsPaused = true;
+                        Time.timeScale = 0;
+                        blurUI.SetActive(true);
+                        camera.UnlockCursor();
+                    }
                 }
                 else
                 {
-                    camera.IsPaused = true;
-                    Time.timeScale = 0;
-                    blurUI.SetActive(true);
-                    camera.UnlockCursor();
+                    miniGamesSwitcher.HideMiniGames();
                 }
             }
         }

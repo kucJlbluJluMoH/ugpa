@@ -9,7 +9,14 @@ public class LobbyController : MonoBehaviour
     {
         
     }
-    public void LoadSave()
+
+    public void Settings()
+    {
+        
+    }
+    
+    
+    void LoadSave()
     {
         SceneManager.LoadScene(1);
     }

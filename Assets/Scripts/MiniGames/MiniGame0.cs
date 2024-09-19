@@ -1,13 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class MiniGame0 : MonoBehaviour
 {
-    public String rightAnswer;
+    private int MyId;
+    private String rightAnswer;
+    public TMP_InputField tmpInputFiled;
+    public TextMeshProUGUI sequnceTxt;
     
+    private MiniGamesSwitcher _miniGamesSwitcher;
     // Шифр для цифр от 1 до 6
     private static readonly Dictionary<int, string> cipher = new Dictionary<int, string>
     {
@@ -19,21 +24,48 @@ public class MiniGame0 : MonoBehaviour
         { 6, "01011" }
     };
 
-    public void GenerateCode()
+    private void Start()
+    {
+        _miniGamesSwitcher = GameObject.Find("MiniGamesCanvas").GetComponent<MiniGamesSwitcher>();
+    }
+
+    private void Update()
+    {
+        
+        if (_miniGamesSwitcher.isWaitingAction)
+        {
+            MyId = _miniGamesSwitcher.WaitingMiniGameID;
+            _miniGamesSwitcher.isWaitingAction = false;
+            GenerateCode();
+        }
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            if (tmpInputFiled.text == rightAnswer)
+            {
+                _miniGamesSwitcher.HideMiniGames();
+                _miniGamesSwitcher.PassedMiniGameID = MyId;
+            }
+            else
+            {
+                tmpInputFiled.text = "";
+                _miniGamesSwitcher.HideMiniGames();
+            }
+            
+        }
+    }
+
+    private void GenerateCode()
     {
         int lengthOfSequence = 3; // Длина последовательности
         List<int> randomSequence = GenerateRandomSequence(lengthOfSequence);
         
         string encryptedSequence = EncryptSequence(randomSequence);
-                                                                                                   
+        sequnceTxt.text = "Последовательность: " + encryptedSequence;                                                                         
         // Выводим результаты в консоль
-        Debug.Log("Сгенерированная последовательность: " + string.Join(", ", randomSequence));
-        Debug.Log("Зашифрованная последовательность: " + encryptedSequence);
-                                                                                                   
         // Дешифровка для проверки
         List<int> decryptedSequence = DecryptSequence(encryptedSequence);
-        Debug.Log("Дешифрованная последовательность: " + string.Join(", ", decryptedSequence));
-        rightAnswer = string.Join(", ", decryptedSequence);
+        rightAnswer = string.Join("", decryptedSequence);
+        Debug.Log("Дешифрованная последовательность: " + rightAnswer);
     }
     // Генерирует случайную последовательность цифр
     private List<int> GenerateRandomSequence(int length)

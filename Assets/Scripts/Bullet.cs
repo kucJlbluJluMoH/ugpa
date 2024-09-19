@@ -26,7 +26,7 @@ public class Bullet : MonoBehaviour
     private void Awake()
     {
 
-        Destroy(gameObject, 5);
+        Destroy(gameObject, 2);
         
     }
     IEnumerator HideInFirstSec()
@@ -45,25 +45,22 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.tag!="Player" && collision.gameObject.tag !="Blaster")
         {
-            if (!IsSmallBullet)
-            {
-                Debug.Log(collision.gameObject.tag);
-            }
             if (collision.gameObject.tag == "Enemy")
             {
                 if(IsSmallBullet)
                 {
-                    collision.gameObject.GetComponent<EnemyController>().HP -= Smalldamage;
+                    collision.gameObject.GetComponent<EnemyController>().TakeDamageEnemy(Smalldamage); 
                 }
                 else
                 {
-                    collision.gameObject.GetComponent<EnemyController>().HP -= Bigdamage;
+                    collision.gameObject.GetComponent<EnemyController>().TakeDamageEnemy(Bigdamage);
                 }
             }
             else
             {
-                if (IsSmallBullet) { 
-                Destroy(gameObject);
+                if (IsSmallBullet) 
+                { 
+                    Destroy(gameObject);
                 }
             }
 
