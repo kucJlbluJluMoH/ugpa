@@ -4,18 +4,19 @@ using Unity.VisualScripting;
 
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.Serialization;
 
 public class BlasterController : MonoBehaviour
 {
     // Start is called before the first frame update
-    public GameObject SmallBullet;
-    public GameObject BigBullet;
-    public GameObject VFX_fire;
-    public Transform VFX_fireShow;
+    [FormerlySerializedAs("SmallBullet")] public GameObject smallBullet;
+    [FormerlySerializedAs("BigBullet")] public GameObject bigBullet;
+    [FormerlySerializedAs("VFX_fire")] public GameObject vfxFire;
+    [FormerlySerializedAs("VFX_fireShow")] public Transform vfxFireShow;
     public GameObject stvoli;
-    public Transform VFX_fire_small;
-    public Transform VFX_fire_small_normPos;
-    public Transform VFX_fire_small_hidePos;
+    [FormerlySerializedAs("VFX_fire_small")] public Transform vfxFireSmall;
+    [FormerlySerializedAs("VFX_fire_small_normPos")] public Transform vfxFireSmallNormPos;
+    [FormerlySerializedAs("VFX_fire_small_hidePos")] public Transform vfxFireSmallHidePos;
     public Transform spawnBullet;
     public Transform syncIdleTr;
     public Transform syncAimedTr;
@@ -33,51 +34,50 @@ public class BlasterController : MonoBehaviour
     public float aimSpeed = 5;
     public float smallRecoilCam = 0.8f;
     public float bigRecoilCam = 1.5f;
-    public float BlinkDelay = 1.5f;
+    [FormerlySerializedAs("BlinkDelay")] public float blinkDelay = 1.5f;
     public float delayAfterBigShot;
     public float delayAfterSmallShot;
+    private float _multiplier = 0.1f;
+    private float _multiplierStep;
+    private bool _isAiming = false;
+    private bool _isBlinking = false;
+    private bool _isHoldingLkm = false;
+    private bool _isVisibleBlink = true;
+    private CameraController _cameraController;
+    float _delay = 0;
+    float _delayBigstvol = 0;
+    private Animator _anim;
+    int _currentstvol = 1;//0-small, 1-big
 
-    private float multiplier = 0.1f;
-    private float multiplierStep;
-    private bool isAiming = false;
-    private bool isBlinking = false;
-    private bool isHoldingLKM = false;
-    private bool isVisibleBlink = true;
-    private CameraController cameraController;
-    float delay = 0;
-    float delayBIGSTVOL = 0;
-    private Animator anim;
-    int currentstvol = 0;//0-small, 1-big
-
-    private GameObject Player;
-    private PlayerMovement plmove;
-    private RecoilController recoilController;
+    private GameObject _player;
+    private PlayerMovement _plmove;
+    private RecoilController _recoilController;
     void Start()
     {
-        multiplierStep = (1 - multiplier) * 0.1f / holdTime;
-        recoilController = GetComponent<RecoilController>();
-        cameraController = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
-        Player = GameObject.FindGameObjectWithTag("Player");
-        anim = GetComponent<Animator>();
-        StartCoroutine(DELAY());
+        _multiplierStep = (1 - _multiplier) * 0.1f / holdTime;
+        _recoilController = GetComponent<RecoilController>();
+        _cameraController = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
+        _player = GameObject.FindGameObjectWithTag("Player");
+        _anim = GetComponent<Animator>();
+        StartCoroutine(Delay());
         StartCoroutine(BlinkBigStvol());
         StartCoroutine(DELAY_BIG_STVOL());
-        VFX_fire.SetActive(false);
-        plmove = Player.GetComponent<PlayerMovement>();
+        vfxFire.SetActive(false);
+        _plmove = _player.GetComponent<PlayerMovement>();
 
     }
     private void Shoot()
     {
 
-        if (currentstvol == 1 && delayBIGSTVOL <= 0)
+        if (_currentstvol == 1 && _delayBigstvol <= 0)
         {
-            bigDamage = bigDamageMaximum * multiplier;
-            multiplier = 0.1f;
-            isHoldingLKM = false;
-            isBlinking = false;
-            isVisibleBlink = true;
+            bigDamage = bigDamageMaximum * _multiplier;
+            _multiplier = 0.1f;
+            _isHoldingLkm = false;
+            _isBlinking = false;
+            _isVisibleBlink = true;
             float x, y;
-            if (isAiming)
+            if (_isAiming)
             {
                 x = Random.Range(-aimspread, aimspread);
                 y = Random.Range(-aimspread, aimspread);
@@ -90,20 +90,20 @@ public class BlasterController : MonoBehaviour
             Vector3 spreadVector = new Vector3(x, y, 0);
             Vector3 dirwithspread = spawnBullet.forward + spreadVector;
             // Создаем пулю и задаем её начальную ориентацию как у объекта spawnBullet
-            GameObject currentBullet = Instantiate(BigBullet, spawnBullet.position, spawnBullet.rotation);
+            GameObject currentBullet = Instantiate(bigBullet, spawnBullet.position, spawnBullet.rotation);
             currentBullet.GetComponent<Rigidbody>().AddForce(dirwithspread.normalized * shootBigForce, ForceMode.Impulse);
-            anim.SetTrigger("DecreaseEmis");
-            cameraController.recoilStrength = bigRecoilCam;
-            cameraController.ApplyRecoil();
-            recoilController.AddRecoil(10);
-            delayBIGSTVOL = delayAfterBigShot;
+            _anim.SetTrigger("DecreaseEmis");
+            _cameraController.recoilStrength = bigRecoilCam;
+            _cameraController.ApplyRecoil();
+            _recoilController.AddRecoil(10);
+            _delayBigstvol = delayAfterBigShot;
         }
-        if (currentstvol == 0 && delay <= 0)
+        if (_currentstvol == 0 && _delay <= 0)
         {
            
-            VFX_fire_small.position = VFX_fire_small_normPos.position;
+            vfxFireSmall.position = vfxFireSmallNormPos.position;
             float x, y;
-            if(isAiming)
+            if(_isAiming)
             {
                 x = Random.Range(-aimspread, aimspread);
                 y = Random.Range(-aimspread, aimspread);
@@ -117,12 +117,12 @@ public class BlasterController : MonoBehaviour
             Vector3 spreadVector = new Vector3(x, y, 0);
             Vector3 dirwithspread = spawnBullet.forward + spreadVector;
             // Создаем пулю и задаем её начальную ориентацию как у объекта spawnBullet
-            GameObject currentBullet = Instantiate(SmallBullet, spawnBullet.position, spawnBullet.rotation);
+            GameObject currentBullet = Instantiate(smallBullet, spawnBullet.position, spawnBullet.rotation);
             currentBullet.GetComponent<Rigidbody>().AddForce(dirwithspread.normalized * shootForce, ForceMode.Impulse);
-            delay = delayAfterSmallShot;
-            cameraController.recoilStrength = smallRecoilCam;
-            cameraController.ApplyRecoil();
-            recoilController.AddRecoil(2);
+            _delay = delayAfterSmallShot;
+            _cameraController.recoilStrength = smallRecoilCam;
+            _cameraController.ApplyRecoil();
+            _recoilController.AddRecoil(2);
             //plmove.currentRecoil += recoilSmallAmount;
         }
 
@@ -130,14 +130,14 @@ public class BlasterController : MonoBehaviour
     }
  
 
-    public IEnumerator DELAY()
+    public IEnumerator Delay()
     {
         while (true)
         {
-            delay -= 0.1f;
-            if (delay <= delayAfterSmallShot/2)
+            _delay -= 0.1f;
+            if (_delay <= delayAfterSmallShot/2)
             {
-                VFX_fire_small.position = VFX_fire_small_hidePos.position;
+                vfxFireSmall.position = vfxFireSmallHidePos.position;
             }
             yield return new WaitForSeconds(0.1f);
         }
@@ -147,20 +147,20 @@ public class BlasterController : MonoBehaviour
     {
         while (true)
         {
-           if(currentstvol==1 && isHoldingLKM)
+           if(_currentstvol==1 && _isHoldingLkm)
             { 
-                if(multiplier<1)
+                if(_multiplier<1)
                 {
-                    multiplier += multiplierStep;
+                    _multiplier += _multiplierStep;
                 }
-                if(multiplier>=1)
+                if(_multiplier>=1)
                 {
-                    isBlinking = true;
+                    _isBlinking = true;
                 }
             }
            
             
-            delayBIGSTVOL -= 0.1f;
+            _delayBigstvol -= 0.1f;
            
             yield return new WaitForSeconds(0.1f);
         }
@@ -170,20 +170,20 @@ public class BlasterController : MonoBehaviour
     {
         while (true)
         {
-            if(isBlinking)
+            if(_isBlinking)
             {
-                if(isVisibleBlink)
+                if(_isVisibleBlink)
                 {
-                    isVisibleBlink = false;
-                    VFX_fire.transform.position = VFX_fire_small_hidePos.position;
+                    _isVisibleBlink = false;
+                    vfxFire.transform.position = vfxFireSmallHidePos.position;
                 }
                 else
                 {
-                    isVisibleBlink = true;
-                    VFX_fire.transform.position = VFX_fireShow.position;
+                    _isVisibleBlink = true;
+                    vfxFire.transform.position = vfxFireShow.position;
                 }
             }
-            yield return new WaitForSeconds(BlinkDelay);
+            yield return new WaitForSeconds(blinkDelay);
         }
         
     }
@@ -191,10 +191,10 @@ public class BlasterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!cameraController.IsPaused)
+        if (!_cameraController.isPaused)
         {
 
-            if (Input.GetMouseButtonDown(0) && currentstvol == 0)
+            if (Input.GetMouseButtonDown(0) && _currentstvol == 0)
             {
                 Shoot();
 
@@ -203,45 +203,45 @@ public class BlasterController : MonoBehaviour
             {
                 if (Input.GetMouseButton(0))
                 {
-                    if (currentstvol == 0 && delay <= 0)
+                    if (_currentstvol == 0 && _delay <= 0)
                     {
                         Shoot();
                     }
-                    else if (currentstvol == 1 && delayBIGSTVOL <= 0)
+                    else if (_currentstvol == 1 && _delayBigstvol <= 0)
                     {
-                        VFX_fire.SetActive(true);
-                        isHoldingLKM = true;
+                        vfxFire.SetActive(true);
+                        _isHoldingLkm = true;
                     }
                 }
 
                 else
                 {
-                    if (isHoldingLKM && currentstvol == 1)
+                    if (_isHoldingLkm && _currentstvol == 1)
                     {
                         Shoot();
                     }
-                    isHoldingLKM = false;
-                    VFX_fire.transform.position = VFX_fireShow.position;
-                    VFX_fire.SetActive(false);
-                    multiplier = 0.1f;
+                    _isHoldingLkm = false;
+                    vfxFire.transform.position = vfxFireShow.position;
+                    vfxFire.SetActive(false);
+                    _multiplier = 0.1f;
                 }
             }
             if (Input.GetMouseButton(1))
             {
-                isAiming = true;
+                _isAiming = true;
                 transform.position = Vector3.Lerp(transform.position, syncAimedTr.position, Time.deltaTime * aimSpeed);
             }
             else
             {
                 transform.position = Vector3.Lerp(transform.position, syncIdleTr.position, Time.deltaTime * aimSpeed);
-                isAiming = false;
+                _isAiming = false;
             }
 
-            if (Input.GetButtonDown("SwitchStvol") && !isHoldingLKM)
+            if (Input.GetButtonDown("SwitchStvol") && !_isHoldingLkm)
             {
-                anim.SetTrigger("Change");
-                delay = 0.5f;
-                currentstvol = Mathf.Abs(currentstvol - 1);
+                _anim.SetTrigger("Change");
+                _delay = 0.5f;
+                _currentstvol = Mathf.Abs(_currentstvol - 1);
 
             }
         }

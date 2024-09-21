@@ -1,76 +1,77 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
+
 public class EnemyController : MonoBehaviour
 {
-    public float HP;
+    [FormerlySerializedAs("HP")] public float hp;
     public Transform eyesTransform;
-    public float MoveThreshold = 0.01f;
-    public float RotationThreshold = 1f; // Порог для изменения поворота (настраиваемый)
+    [FormerlySerializedAs("MoveThreshold")] public float moveThreshold = 0.01f;
+    [FormerlySerializedAs("RotationThreshold")] public float rotationThreshold = 1f; // Порог для изменения поворота (настраиваемый)
 
-    [Header("Normal Attack")]
-    public float Damage;
-    public float Speed;
-    public float AttackRangeToDamage;
-    public float AttackCooldown;
-    public float AttackAnimDamageDelay;  
-    private bool IsDelayAfterAttack = false;
-    [Header("Super Attack")]
-    public float SuperDamage;
-    public float SuperSpeed;
-    public float SuperAngularSpeed;
-    public float SuperAcceleration;
-    public float SuperAttackRangeToDamage;
-    public float SuperAttackRangeToStart;
-    public float SuperAttackCooldown;
-    public float AfterSuperAttackDelay;
-    public float SuperAttackTimeToStayIn;
-    public float SuperAttackTimeToContinue;
-    public float MaxDurationOfSuperAttack;
-    public int ProbabilityOfSuperAttack;
-    public float SuperMovingThreshold;
-    public bool IsSuperAttacking = false;
-    public bool IsReadyToMove = false;
-    public bool IsWaitingAfterSuperAttack = false;
-    private bool IsDelayAfterSuperAttack = false;
-    private int CountOfVisiblity = 0;
-    private int MaxCountOfVisiblity = 0;
-    private Vector3 SavedPlayerPostion;
-    private bool IsGotToSavedPlayerTransform = false;
-    private bool IsCoolDownSuperAttack = false;
-    private bool IsWaitingToSaveTransform = false;
-    private int CountOfTimeSuperAttackTimeToContinue;
-    private int MaxCountOfTimeSuperAttackTimeToContinue;
-    private int CountOfDurationOfSuperAttack;
-    private int MaxCountOfDurationOfSuperAttack;
-    private bool ForceStopSuper;
+    [FormerlySerializedAs("Damage")] [Header("Normal Attack")]
+    public float damage;
+    [FormerlySerializedAs("Speed")] public float speed;
+    [FormerlySerializedAs("AttackRangeToDamage")] public float attackRangeToDamage;
+    [FormerlySerializedAs("AttackCooldown")] public float attackCooldown;
+    [FormerlySerializedAs("AttackAnimDamageDelay")] public float attackAnimDamageDelay;  
+    private bool _isDelayAfterAttack = false;
+    [FormerlySerializedAs("SuperDamage")] [Header("Super Attack")]
+    public float superDamage;
+    [FormerlySerializedAs("SuperSpeed")] public float superSpeed;
+    [FormerlySerializedAs("SuperAngularSpeed")] public float superAngularSpeed;
+    [FormerlySerializedAs("SuperAcceleration")] public float superAcceleration;
+    [FormerlySerializedAs("SuperAttackRangeToDamage")] public float superAttackRangeToDamage;
+    [FormerlySerializedAs("SuperAttackRangeToStart")] public float superAttackRangeToStart;
+    [FormerlySerializedAs("SuperAttackCooldown")] public float superAttackCooldown;
+    [FormerlySerializedAs("SuperAttackTimeToStayIn")] public float superAttackTimeToStayIn;
+    [FormerlySerializedAs("SuperAttackTimeToContinue")] public float superAttackTimeToContinue;
+    [FormerlySerializedAs("MaxDurationOfSuperAttack")] public float maxDurationOfSuperAttack;
+    [FormerlySerializedAs("ProbabilityOfSuperAttack")] public int probabilityOfSuperAttack;
+    [FormerlySerializedAs("SuperMovingThreshold")] public float superMovingThreshold;
+    [FormerlySerializedAs("IsSuperAttacking")] public bool isSuperAttacking = false;
+    [FormerlySerializedAs("IsReadyToMove")] public bool isReadyToMove = false;
+    [FormerlySerializedAs("IsWaitingAfterSuperAttack")] public bool isWaitingAfterSuperAttack = false;
+    private bool _isDelayAfterSuperAttack = false;
+    private int _countOfVisiblity = 0;
+    private int _maxCountOfVisiblity = 0;
+    private Vector3 _savedPlayerPostion;
+    private bool _isGotToSavedPlayerTransform = false;
+    private bool _isCoolDownSuperAttack = false;
+    private bool _isWaitingToSaveTransform = false;
+    private int _countOfTimeSuperAttackTimeToContinue;
+    private int _maxCountOfTimeSuperAttackTimeToContinue;
+    private int _countOfDurationOfSuperAttack;
+    private int _maxCountOfDurationOfSuperAttack;
+    private bool _forceStopSuper;
     [Header("Audio")]
     public AudioSource ridingAudioSource; // АудиоИсточник для воспроизведения
     public AudioSource audioSource; // АудиоИсточник для воспроизведения
     public AudioClip riding;
     public AudioClip[] audioClips;
-    private bool isStoppingRiding = false;
-    private bool isStartingRiding = true;
+    private bool _isStoppingRiding = false;
+    private bool _isStartingRiding = true;
     
     
-    private bool HasSeenPlayer = false;
-    private Vector3 previousPosition;
-    private Quaternion previousRotation; // Хранит предыдущий поворот
-    private Transform player;
-    private PlayerMovement playerMovement;
-    private NavMeshAgent agent;
-    private Animator animator;
+    private bool _hasSeenPlayer = false;
+    private Vector3 _previousPosition;
+    private Quaternion _previousRotation; // Хранит предыдущий поворот
+    private Transform _player;
+    private PlayerMovement _playerMovement;
+    private NavMeshAgent _agent;
+    private Animator _animator;
     private Developermenu _developermenu;
     void Start()
     {
         _developermenu = GameObject.Find("DeveloperMenuController").GetComponent<Developermenu>();
-        MaxCountOfDurationOfSuperAttack = (int)(MaxDurationOfSuperAttack / 0.1f);
-        MaxCountOfTimeSuperAttackTimeToContinue = (int)(SuperAttackTimeToContinue / 0.1f);
-        MaxCountOfVisiblity = (int)(SuperAttackTimeToStayIn / 0.1f);
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
-        agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
+        _maxCountOfDurationOfSuperAttack = (int)(maxDurationOfSuperAttack / 0.1f);
+        _maxCountOfTimeSuperAttackTimeToContinue = (int)(superAttackTimeToContinue / 0.1f);
+        _maxCountOfVisiblity = (int)(superAttackTimeToStayIn / 0.1f);
+        _player = GameObject.FindGameObjectWithTag("Player").transform;
+        _playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
+        _agent = GetComponent<NavMeshAgent>();
+        _animator = GetComponent<Animator>();
         StartCoroutine(SuperAttackVisiblityCheck());
         StartCoroutine(CheckDurationOfSuperAttacK());
     }
@@ -129,43 +130,43 @@ public class EnemyController : MonoBehaviour
 
     private IEnumerator AttackAnimDamageTimer()
     {
-        yield return new WaitForSeconds(AttackAnimDamageDelay);
+        yield return new WaitForSeconds(attackAnimDamageDelay);
         if (IsInView())
         {
-            float distance = Vector3.Distance(eyesTransform.position, player.position);
-            if (distance < AttackRangeToDamage)
+            float distance = Vector3.Distance(eyesTransform.position, _player.position);
+            if (distance < attackRangeToDamage)
             {
-                playerMovement.TakeDamaage(Damage);
+                _playerMovement.TakeDamaage(damage);
             }
         }
     }
     
     private IEnumerator AttackCooldownTimer()
     {
-        yield return new WaitForSeconds(AttackCooldown);
-        IsDelayAfterAttack = false;
+        yield return new WaitForSeconds(attackCooldown);
+        _isDelayAfterAttack = false;
     }
     private IEnumerator SuperAttackCoolDown()
     {
-        yield return new WaitForSeconds(SuperAttackCooldown);
-        IsCoolDownSuperAttack = false;
+        yield return new WaitForSeconds(superAttackCooldown);
+        _isCoolDownSuperAttack = false;
     }
     private IEnumerator CheckDurationOfSuperAttacK()
     {
         while (true)
         {
-            if(IsSuperAttacking)
+            if(isSuperAttacking)
             {
-                CountOfDurationOfSuperAttack += 1;
-                if (CountOfDurationOfSuperAttack >= MaxCountOfDurationOfSuperAttack)
+                _countOfDurationOfSuperAttack += 1;
+                if (_countOfDurationOfSuperAttack >= _maxCountOfDurationOfSuperAttack)
                 {
-                    CountOfDurationOfSuperAttack = 0;
-                    ForceStopSuper = true;
+                    _countOfDurationOfSuperAttack = 0;
+                    _forceStopSuper = true;
                 }
             }
             else
             {
-                CountOfDurationOfSuperAttack = 0;
+                _countOfDurationOfSuperAttack = 0;
             }
             yield return new WaitForSeconds(0.1f);
         }
@@ -175,42 +176,42 @@ public class EnemyController : MonoBehaviour
     {
         while (true)
         {
-            CountOfTimeSuperAttackTimeToContinue += 1;
+            _countOfTimeSuperAttackTimeToContinue += 1;
 
 
             yield return new WaitForSeconds(0.1f);
             RaycastHit hit;
-            if (Physics.Raycast(eyesTransform.position, player.position - eyesTransform.position, out hit) && !IsCoolDownSuperAttack&&!IsSuperAttacking)
+            if (Physics.Raycast(eyesTransform.position, _player.position - eyesTransform.position, out hit) && !_isCoolDownSuperAttack&&!isSuperAttacking)
             {
-                if (hit.transform == player)
+                if (hit.transform == _player)
                 {
                     Vector3 currentPosition = transform.position;
-                    if (Vector3.Distance(currentPosition, player.position) < SuperAttackRangeToStart)
+                    if (Vector3.Distance(currentPosition, _player.position) < superAttackRangeToStart)
                     {
-                        CountOfVisiblity += 1;
+                        _countOfVisiblity += 1;
                     }
                     else
                     {
-                        CountOfVisiblity = 0;
+                        _countOfVisiblity = 0;
                     }
 
                 }
                 else if (hit.transform != gameObject.transform)
                 {
-                    CountOfVisiblity = 0;
+                    _countOfVisiblity = 0;
                 }
             }
-            if (CountOfVisiblity == MaxCountOfVisiblity && !IsCoolDownSuperAttack)
+            if (_countOfVisiblity == _maxCountOfVisiblity && !_isCoolDownSuperAttack)
             {
-                CountOfVisiblity = 0;
-                if (Random.Range(0, 100) < (ProbabilityOfSuperAttack - 1))
+                _countOfVisiblity = 0;
+                if (Random.Range(0, 100) < (probabilityOfSuperAttack - 1))
                 {
-                    IsSuperAttacking = true;
-                    agent.isStopped = true;
-                    agent.speed = 0;
-                    IsWaitingToSaveTransform = true;
-                    animator.SetTrigger("BeforeSuper");
-                    IsGotToSavedPlayerTransform = false;
+                    isSuperAttacking = true;
+                    _agent.isStopped = true;
+                    _agent.speed = 0;
+                    _isWaitingToSaveTransform = true;
+                    _animator.SetTrigger("BeforeSuper");
+                    _isGotToSavedPlayerTransform = false;
 
                 }
             }
@@ -223,48 +224,48 @@ public class EnemyController : MonoBehaviour
         Quaternion currentRotation = transform.rotation; // Получаем текущий поворот
 
         // Проверяем, изменилось ли положение или поворот
-        bool hasMoved = Vector3.Distance(currentPosition, previousPosition) > MoveThreshold;
-        bool hasRotated = Quaternion.Angle(currentRotation, previousRotation) > RotationThreshold; // Порог для поворота
+        bool hasMoved = Vector3.Distance(currentPosition, _previousPosition) > moveThreshold;
+        bool hasRotated = Quaternion.Angle(currentRotation, _previousRotation) > rotationThreshold; // Порог для поворота
 
         if (hasMoved | hasRotated)
         {
-            animator.SetBool("Riding", true);
+            _animator.SetBool("Riding", true);
         
-            if (!isStartingRiding)
+            if (!_isStartingRiding)
             {
                 StopCoroutine(RidingSmoothStop(0.1f));
                 StartCoroutine(RidingSmoothStart(0.1f));
 
-                isStartingRiding = true;
-                isStoppingRiding = false;
+                _isStartingRiding = true;
+                _isStoppingRiding = false;
             }
         }
         else
         {
-            animator.SetBool("Riding", false);
+            _animator.SetBool("Riding", false);
         
-            if (!isStoppingRiding)
+            if (!_isStoppingRiding)
             {
                 StopCoroutine(RidingSmoothStart(0.1f));
-                isStoppingRiding = true;
-                isStartingRiding = false;
+                _isStoppingRiding = true;
+                _isStartingRiding = false;
                 StartCoroutine(RidingSmoothStop(0.1f));
             }
         }
 
         // Обновляем предыдущие значения
-        previousPosition = currentPosition;
-        previousRotation = currentRotation; // Обновляем предыдущий поворот
+        _previousPosition = currentPosition;
+        _previousRotation = currentRotation; // Обновляем предыдущий поворот
     }
 
     public void TakeDamageEnemy(float damage)
     {
-        HasSeenPlayer = true;
-        HP -= damage;
+        _hasSeenPlayer = true;
+        hp -= damage;
     }
     void Update()
     {
-        if (HP <= 0 | _developermenu.isKilledEverybody)
+        if (hp <= 0 | _developermenu.isKilledEverybody)
         {
             Destroy(gameObject);
         }
@@ -272,103 +273,103 @@ public class EnemyController : MonoBehaviour
         {
             if(!_developermenu.isFreezed)
             {
-                agent.isStopped = false;
+                _agent.isStopped = false;
             CheckIsMoving();
-            if(!HasSeenPlayer)
+            if(!_hasSeenPlayer)
             {
-               HasSeenPlayer = IsInView();
+               _hasSeenPlayer = IsInView();
             }
-            if (HasSeenPlayer &&!IsSuperAttacking&&!IsWaitingAfterSuperAttack&&CountOfTimeSuperAttackTimeToContinue>=MaxCountOfTimeSuperAttackTimeToContinue)
+            if (_hasSeenPlayer &&!isSuperAttacking&&!isWaitingAfterSuperAttack&&_countOfTimeSuperAttackTimeToContinue>=_maxCountOfTimeSuperAttackTimeToContinue)
             {
                 
-                float distance = Vector3.Distance(eyesTransform.position, player.position);
-                if (distance <= AttackRangeToDamage)
+                float distance = Vector3.Distance(eyesTransform.position, _player.position);
+                if (distance <= attackRangeToDamage)
                 {
-                    Vector3 lookPos = player.position - transform.position;
+                    Vector3 lookPos = _player.position - transform.position;
                     lookPos.y = 0;
                     Quaternion rotation = Quaternion.LookRotation(lookPos);
                     transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 0.2f);
-                    if(!IsDelayAfterAttack)
+                    if(!_isDelayAfterAttack)
                     {
-                        animator.SetTrigger("Attack");
+                        _animator.SetTrigger("Attack");
                         PlayTrack(0);
-                        IsDelayAfterAttack = true;
-                        CountOfTimeSuperAttackTimeToContinue = 0;
+                        _isDelayAfterAttack = true;
+                        _countOfTimeSuperAttackTimeToContinue = 0;
                         StartCoroutine(AttackAnimDamageTimer());
                         StartCoroutine(AttackCooldownTimer());
                     }
                     else
                     {
-                        agent.speed = 0;
+                        _agent.speed = 0;
                     }
                 }
-                else if(!IsDelayAfterAttack)
+                else if(!_isDelayAfterAttack)
                 {
-                    agent.speed = Speed;
-                    agent.acceleration = 10;
-                    agent.angularSpeed = 2000;
-                    agent.avoidancePriority = 50;
-                    agent.SetDestination(player.position);
+                    _agent.speed = speed;
+                    _agent.acceleration = 10;
+                    _agent.angularSpeed = 2000;
+                    _agent.avoidancePriority = 50;
+                    _agent.SetDestination(_player.position);
                 }
             }
 
-            if (agent.avoidancePriority == 100)
+            if (_agent.avoidancePriority == 100)
             {
-                if ((Vector3.Distance(gameObject.transform.position, player.position) < SuperAttackRangeToDamage)&&IsInView())
+                if ((Vector3.Distance(gameObject.transform.position, _player.position) < superAttackRangeToDamage)&&IsInView())
                 {
                     Debug.Log("updateLocate");
-                    ForceStopSuper = true;
-                    agent.isStopped = true;
+                    _forceStopSuper = true;
+                    _agent.isStopped = true;
                 }
             }
-
-            if (IsSuperAttacking && IsReadyToMove)
+            
+            if (isSuperAttacking && isReadyToMove)
             {
-                agent.isStopped = false;
-                if (IsWaitingToSaveTransform)
+                _agent.isStopped = false;
+                if (_isWaitingToSaveTransform)
                 {
-                    SavedPlayerPostion = player.position;
+                    _savedPlayerPostion = _player.position;
                     //SavedPlayerTransform = player.transform;
-                    IsWaitingToSaveTransform = false;
+                    _isWaitingToSaveTransform = false;
                 }
 
                 Vector3 currentPosition1 = gameObject.transform.position;
-                if (Vector3.Distance(currentPosition1, SavedPlayerPostion) < SuperMovingThreshold)
+                if (Vector3.Distance(currentPosition1, _savedPlayerPostion) < superMovingThreshold)
                 {
-                    IsGotToSavedPlayerTransform = true;
+                    _isGotToSavedPlayerTransform = true;
                 }
 
-                if (ForceStopSuper)
+                if (_forceStopSuper)
                 {
-                    IsGotToSavedPlayerTransform = true;
+                    _isGotToSavedPlayerTransform = true;
                 }
 
-                if (!IsGotToSavedPlayerTransform)
+                if (!_isGotToSavedPlayerTransform)
                 {
 
-                    animator.SetBool("Rotating", true);
-                    agent.avoidancePriority = 100;
-                    agent.acceleration = SuperAcceleration;
-                    agent.angularSpeed = SuperAngularSpeed;
-                    agent.speed = SuperSpeed;
-                    agent.SetDestination(SavedPlayerPostion);
+                    _animator.SetBool("Rotating", true);
+                    _agent.avoidancePriority = 100;
+                    _agent.acceleration = superAcceleration;
+                    _agent.angularSpeed = superAngularSpeed;
+                    _agent.speed = superSpeed;
+                    _agent.SetDestination(_savedPlayerPostion);
                 }
                 else
                 {
-                    animator.SetBool("Rotating", false);
-                    IsReadyToMove = false;
-                    IsWaitingAfterSuperAttack = true;
-                    IsSuperAttacking = false;
-                    IsCoolDownSuperAttack = true;
+                    _animator.SetBool("Rotating", false);
+                    isReadyToMove = false;
+                    isWaitingAfterSuperAttack = true;
+                    isSuperAttacking = false;
+                    _isCoolDownSuperAttack = true;
                     StartCoroutine(SuperAttackCoolDown());
-                    animator.SetTrigger("AfterSuper");
-                    CountOfTimeSuperAttackTimeToContinue = 0;
-                    if ((Vector3.Distance(gameObject.transform.position, player.position) < SuperAttackRangeToDamage) &&
+                    _animator.SetTrigger("AfterSuper");
+                    _countOfTimeSuperAttackTimeToContinue = 0;
+                    if ((Vector3.Distance(gameObject.transform.position, _player.position) < superAttackRangeToDamage) &&
                         IsInView())
                     {
                         Debug.Log("Popal");
-                        playerMovement.TakeDamaage(SuperDamage);
-                        playerMovement.Fall();
+                        _playerMovement.TakeDamaage(superDamage);
+                        _playerMovement.Fall();
 
 
                     }
@@ -377,16 +378,16 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                agent.isStopped = true;
+                _agent.isStopped = true;
             }
         }
     }
     private bool IsInView()
     {
         RaycastHit hit;
-        if (Physics.Raycast(eyesTransform.position, player.position - eyesTransform.position, out hit))
+        if (Physics.Raycast(eyesTransform.position, _player.position - eyesTransform.position, out hit))
         { 
-            if (hit.transform != player)
+            if (hit.transform != _player)
             {
                 return false;
             }

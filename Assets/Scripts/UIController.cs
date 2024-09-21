@@ -4,28 +4,30 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 public class UIController : MonoBehaviour
 {
     public MiniGamesSwitcher miniGamesSwitcher;
+    public GameObject developerMenu;
     public GameObject blurUI;
-    public GameObject DedEffectobj;
-    public Image DeadEffect; // ������ �� �����������
+    [FormerlySerializedAs("DedEffectobj")] public GameObject dedEffectobj;
+    [FormerlySerializedAs("DeadEffect")] public Image deadEffect; // ������ �� �����������
     public GameObject deadScreen; // ������ �� ������ DeadScreen
     public GameObject deadScreen1; // ������ �� ������ DeadScreen
     public GameObject deadScreen2; // ������ �� ������ DeadScreen
     public float fadeSpeed = 2f; // �������� ���������
     public SetGraphics setGraphics;
-    private int currentGraphicIndex = 2;
-    public GameObject PauseMenu; 
+    private int _currentGraphicIndex = 2;
+    [FormerlySerializedAs("PauseMenu")] public GameObject pauseMenu; 
     public Slider slider;
     public GameObject crosshair;
-    private PlayerMovement playerMovement;
-    private CameraController camera;
-    private float currentAlpha = 0f; // ������� ��������������
+    private PlayerMovement _playerMovement;
+    private CameraController _camera;
+    private float _currentAlpha = 0f; // ������� ��������������
 
 
-    private bool isPanelActive = false;
+    private bool _isPanelActive = false;
     
     
     
@@ -38,17 +40,17 @@ public class UIController : MonoBehaviour
     {
      
 
-        DedEffectobj.SetActive(false);
-        playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
-        camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
+        dedEffectobj.SetActive(false);
+        _playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
+        _camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
         // ������������� �������� �������� �� ���������
         slider.value = 400;
         // �������� ������ ��� ������
-        PauseMenu.SetActive(false);
+        pauseMenu.SetActive(false);
         Time.timeScale = 1;
-        camera.mouseSensitivity = slider.value;
+        _camera.mouseSensitivity = slider.value;
 
-        camera.LockCursor();
+        _camera.LockCursor();
 
     }
 
@@ -59,30 +61,31 @@ public class UIController : MonoBehaviour
     public void RestartLevel()
     {
         Time.timeScale = 1;
-        camera.LockCursor();
+        _camera.LockCursor();
         SceneManager.LoadScene(1);
     }
     public void Update()
     {
-        if(playerMovement.HP<=0)
+        if(_playerMovement.hp<=0)
         {
-            DedEffectobj.SetActive(true);
-            currentAlpha += fadeSpeed * Time.deltaTime;
+            _playerMovement.hp = 0;
+            dedEffectobj.SetActive(true);
+            _currentAlpha += fadeSpeed * Time.deltaTime;
 
             // ������������ �������������� ��������� 1
-            currentAlpha = Mathf.Clamp(currentAlpha, 0f, 1f);
+            _currentAlpha = Mathf.Clamp(_currentAlpha, 0f, 1f);
 
             // ��������� ���� �����������
-            DeadEffect.color = new Color(DeadEffect.color.r, DeadEffect.color.g, DeadEffect.color.b, currentAlpha);
+            deadEffect.color = new Color(deadEffect.color.r, deadEffect.color.g, deadEffect.color.b, _currentAlpha);
 
             // ���������, �������� �� �������������� 1
-            if (currentAlpha >= 1f)
+            if (_currentAlpha >= 1f)
             {
                 // �������� ������ DeadScreen
                 deadScreen.SetActive(true);
                 deadScreen1.SetActive(true);
                 deadScreen2.SetActive(true);
-                camera.UnlockCursor();
+                _camera.UnlockCursor();
                 Time.timeScale = 0;
 
             }
@@ -92,32 +95,56 @@ public class UIController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 //setGraphics.quality.value = currentGraphicIndex;
-                currentGraphicIndex = setGraphics.quality.value;
-                if (!miniGamesSwitcher.isInGame)
+                _currentGraphicIndex = setGraphics.quality.value;
+                if (!miniGamesSwitcher.isInGame && !developerMenu.activeSelf)
                 {
-                    isPanelActive = !isPanelActive;
-                    PauseMenu.SetActive(isPanelActive);
-                    crosshair.SetActive(!isPanelActive);
-                    if (!isPanelActive)
+                    _isPanelActive = !_isPanelActive;
+                    pauseMenu.SetActive(_isPanelActive);
+                    crosshair.SetActive(!_isPanelActive);
+                    if (!_isPanelActive)
                     {
+                        
                         Time.timeScale = 1;
                         blurUI.SetActive(false);
-                        camera.mouseSensitivity = slider.value;
-                        camera.IsPaused = false;
-                        camera.LockCursor();
+                        _camera.mouseSensitivity = slider.value;
+                        _camera.isPaused = false;
+                        _camera.LockCursor();
 
                     }
                     else
                     {
-                        camera.IsPaused = true;
-                        Time.timeScale = 0;
-                        blurUI.SetActive(true);
-                        camera.UnlockCursor();
+
+                    
+                            _camera.isPaused = true;
+                            Time.timeScale = 0;
+                            blurUI.SetActive(true);
+                            _camera.UnlockCursor();
+                        
                     }
                 }
                 else
                 {
-                    miniGamesSwitcher.HideMiniGames();
+                    if (developerMenu.activeSelf)
+                    {
+                        developerMenu.SetActive(false);
+                        Time.timeScale = 1;
+                        blurUI.SetActive(false);
+                        _camera.mouseSensitivity = slider.value;
+                        _camera.isPaused = false;
+                        _camera.LockCursor();
+                    }
+
+                    if (miniGamesSwitcher.isInGame )
+                
+                    {
+                        miniGamesSwitcher.HideMiniGames();
+                        Time.timeScale = 1;
+                        blurUI.SetActive(false);
+                        _camera.mouseSensitivity = slider.value;
+                        _camera.isPaused = false;
+                        _camera.LockCursor();
+                    }
+                    
                 }
             }
         }

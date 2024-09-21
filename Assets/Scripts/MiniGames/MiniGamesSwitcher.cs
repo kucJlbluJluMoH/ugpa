@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class MiniGamesSwitcher : MonoBehaviour
 {
@@ -27,9 +28,9 @@ public class MiniGamesSwitcher : MonoBehaviour
     public GameObject miniGame14;
     public GameObject miniGame15;
     public GameObject miniGame16;
-    public int WaitingMiniGameID=-1;
-    public int PassedMiniGameID=-1;
-    public int MaxIdOfOppenedDoor = -1;
+    [FormerlySerializedAs("WaitingMiniGameID")] public int waitingMiniGameID=-1;
+    [FormerlySerializedAs("PassedMiniGameID")] public int passedMiniGameID=-1;
+    [FormerlySerializedAs("MaxIdOfOppenedDoor")] public int maxIdOfOppenedDoor = -1;
     private List<GameObject> _miniGames;
      void Start()
     {
@@ -68,11 +69,11 @@ public class MiniGamesSwitcher : MonoBehaviour
 
     public void ShowMiniGame(int gameIndex)
     {
-        WaitingMiniGameID = gameIndex;
+        waitingMiniGameID = gameIndex;
         // Hide all mini-games
         HideMiniGames();
         cameraController.UnlockCursor();
-        cameraController.IsPaused = true;
+        cameraController.isPaused = true;
         isInGame = true;
         isWaitingAction = true;
         gameCanvas.SetActive(false);
@@ -94,7 +95,7 @@ public class MiniGamesSwitcher : MonoBehaviour
         
         
         cameraController.LockCursor();
-        cameraController.IsPaused = false;
+        cameraController.isPaused = false;
         isInGame = false;
         gameCanvas.SetActive(true);
         isWaitingAction = false;

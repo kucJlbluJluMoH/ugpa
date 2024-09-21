@@ -86,6 +86,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TeleType.cs" />
     <Compile Include="Assets\Scripts\MiniGames\MiniGame1.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
+    <Compile Include="Assets\Scripts\MiniGames\MiniGame4.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
     <Compile Include="Assets\Scripts\Door.cs" />
@@ -98,6 +99,8 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
     <Compile Include="Assets\Scripts\BlasterController.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
+    <Compile Include="Assets\Scripts\MiniGames\MiniGame3.cs" />
+    <Compile Include="Assets\Scripts\SectorsManager.cs" />
     <Compile Include="Assets\Scripts\EnemyFollowCursor.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
@@ -688,13 +691,13 @@
       <Project>{29f08a18-5e12-d937-570d-10fbe15aff04}</Project>
       <Name>Unity.RenderPipelines.Core.Runtime.Player</Name>
     </ProjectReference>
-    <ProjectReference Include="Unity.AI.Navigation.Player.csproj">
-      <Project>{edcb8e1f-3a89-2d94-c317-ca970de6b446}</Project>
-      <Name>Unity.AI.Navigation.Player</Name>
-    </ProjectReference>
     <ProjectReference Include="Unity.Burst.Player.csproj">
       <Project>{a811a211-f809-8ba2-e767-803b0048ea6a}</Project>
       <Name>Unity.Burst.Player</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.AI.Navigation.Player.csproj">
+      <Project>{edcb8e1f-3a89-2d94-c317-ca970de6b446}</Project>
+      <Name>Unity.AI.Navigation.Player</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.VisualScripting.Core.Player.csproj">
       <Project>{3d8f4931-084b-f167-7d98-d1dbeff893a4}</Project>

@@ -1,65 +1,66 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class EnemyFollowCursor : MonoBehaviour
 {
     public Camera mainCamera; // Ссылка на основную камеру
     public float distance = 5f; // Расстояние от камеры до куба
-    private float moveSpeed = 5f; // Скорость перемещения куба
-    public float MaxmoveSpeed = 5f; // Скорость перемещения куба
-    public float MoveThreshold;
-    private Vector3 previousPosition;
-    private Animator animator;
-    private int AttackDealy;
-    private bool IsAttackReady = true;
-    private bool IsSppedUp = false;
+    private float _moveSpeed = 5f; // Скорость перемещения куба
+    [FormerlySerializedAs("MaxmoveSpeed")] public float maxmoveSpeed = 5f; // Скорость перемещения куба
+    [FormerlySerializedAs("MoveThreshold")] public float moveThreshold;
+    private Vector3 _previousPosition;
+    private Animator _animator;
+    private int _attackDealy;
+    private bool _isAttackReady = true;
+    private bool _isSppedUp = false;
     private void Start()
     {
-        animator = GetComponent<Animator>();
+        _animator = GetComponent<Animator>();
       
-        StartCoroutine(SpedUPP());
+        StartCoroutine(SpedUpp());
 
     }
     IEnumerator Delaay()
     {
 
-        yield return new WaitForSeconds(AttackDealy);
-        IsAttackReady = true;
+        yield return new WaitForSeconds(_attackDealy);
+        _isAttackReady = true;
         
     }
-    IEnumerator SpedUPP()
+    IEnumerator SpedUpp()
     {
         while(true) { 
         yield return new WaitForSeconds(0.05f);
-            if (moveSpeed < MaxmoveSpeed && IsSppedUp)
+            if (_moveSpeed < maxmoveSpeed && _isSppedUp)
             {
-                moveSpeed += 1;
+                _moveSpeed += 1;
             }
         }
     }
     private void CheckIsMoving()
     {
         Vector3 currentPosition = transform.position;
-        if (Vector3.Distance(currentPosition, previousPosition) > MoveThreshold)
+        if (Vector3.Distance(currentPosition, _previousPosition) > moveThreshold)
         {
-            animator.SetBool("Riding", true);
-            IsSppedUp=true;
+            _animator.SetBool("Riding", true);
+            _isSppedUp=true;
         }
         else
         {
-            moveSpeed = 1;
-            IsSppedUp = false;
-            if (IsAttackReady)
+            _moveSpeed = 1;
+            _isSppedUp = false;
+            if (_isAttackReady)
             {
-                animator.SetTrigger("Attack");
-                AttackDealy = Random.Range(3, 10);
-                IsAttackReady= false;
+                _animator.SetTrigger("Attack");
+                _attackDealy = Random.Range(3, 10);
+                _isAttackReady= false;
                 StartCoroutine(Delaay());
             }
-            animator.SetBool("Riding", false);
+            _animator.SetBool("Riding", false);
 
         }
-        previousPosition = currentPosition;
+        _previousPosition = currentPosition;
     }
     void Update()
     {
@@ -75,6 +76,6 @@ public class EnemyFollowCursor : MonoBehaviour
         Vector3 targetPosition = new Vector3(worldPosition.x, transform.position.y, transform.position.z);
 
         // Плавно перемещаем куб к новой позиции
-        transform.position = Vector3.Lerp(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, targetPosition, _moveSpeed * Time.deltaTime);
     }
 }

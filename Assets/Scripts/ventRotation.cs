@@ -2,20 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ventRotation : MonoBehaviour
+public class VentRotation : MonoBehaviour
 {
 
 
     // Скорость вращения пропеллеров
-    private float rotationSpeed = 1000f;
+    private float _rotationSpeed = 1000f;
     private void Start()
     {
-        rotationSpeed = Random.Range(100, 1500);
+        _rotationSpeed = Random.Range(100, 1500);
     }
     void Update()
     {
         // Вращаем пропеллер вокруг оси Y
-        transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
+        transform.Rotate(Vector3.up, _rotationSpeed * Time.deltaTime);
     }
 
 

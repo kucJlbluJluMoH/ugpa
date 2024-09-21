@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -11,16 +12,16 @@ public class MiniGame2 : MonoBehaviour
 {
 
      public TextMeshProUGUI displayTxt;
-     public TMP_InputField InputField;
+     [FormerlySerializedAs("InputField")] public TMP_InputField inputField;
      
      
      
-     private String rightAnswer;
-     private int MyID;
-     private int startingNum;
-     private int missingIndex;
-     private int step;
-     private String sequence="";
+     private String _rightAnswer;
+     private int _myID;
+     private int _startingNum;
+     private int _missingIndex;
+     private int _step;
+     private String _sequence="";
      private MiniGamesSwitcher _miniGamesSwitcher;
      private void Start()
      {
@@ -31,26 +32,26 @@ public class MiniGame2 : MonoBehaviour
      private void Generate()
      {
           int tempType = Random.Range(0,3);//0+ 1- 2* 
-          missingIndex = Random.Range(0, 5);
+          _missingIndex = Random.Range(0, 5);
           switch (tempType)
           {
                    
                case 0:
-                    startingNum = Random.Range(-10,10);
-                    step = Random.Range(1, 10);
+                    _startingNum = Random.Range(-10,10);
+                    _step = Random.Range(1, 10);
                     
                     for (int i = 1; i < 6; i++)
                     {
-                         if (i != missingIndex)
+                         if (i != _missingIndex)
                          {
-                              startingNum += step;
-                              sequence += " " + (startingNum);
+                              _startingNum += _step;
+                              _sequence += " " + (_startingNum);
                          }
                          else
                          {
-                              startingNum += step;
-                              rightAnswer = ""+startingNum;
-                              sequence += " ?";
+                              _startingNum += _step;
+                              _rightAnswer = ""+_startingNum;
+                              _sequence += " ?";
                          }
 
                     }
@@ -58,73 +59,73 @@ public class MiniGame2 : MonoBehaviour
                     break;
                case 1:
                     
-                    startingNum = Random.Range(-10,10);
-                    step = Random.Range(1, 10);
+                    _startingNum = Random.Range(-10,10);
+                    _step = Random.Range(1, 10);
                     for (int i = 1; i < 6; i++)
                     {
-                         if (i != missingIndex)
+                         if (i != _missingIndex)
                          {
-                         startingNum -= step;
-                         sequence += " " + (startingNum);
+                         _startingNum -= _step;
+                         _sequence += " " + (_startingNum);
                          }
                          else
                          {
-                              startingNum -= step;
-                              rightAnswer = ""+startingNum;
-                              sequence += " ?";
+                              _startingNum -= _step;
+                              _rightAnswer = ""+_startingNum;
+                              _sequence += " ?";
                          }
                     }
                     
                     break;
                case 2:
                     
-                    startingNum = Random.Range(-5,5);
-                    while (startingNum==0)
+                    _startingNum = Random.Range(-5,5);
+                    while (_startingNum==0)
                     {
-                         startingNum=Random.Range(-5,5);
+                         _startingNum=Random.Range(-5,5);
                     }
-                    step = Random.Range(1, 5);
+                    _step = Random.Range(1, 5);
                     for (int i = 1; i < 6; i++)
                     {
-                         if (i != missingIndex)
+                         if (i != _missingIndex)
                          {
-                         startingNum *= step;
-                         sequence += " " + (startingNum);
+                         _startingNum *= _step;
+                         _sequence += " " + (_startingNum);
                          }
                          else
                          {
-                              startingNum *= step;
-                              rightAnswer = ""+startingNum;
-                              sequence += " ?";
+                              _startingNum *= _step;
+                              _rightAnswer = ""+_startingNum;
+                              _sequence += " ?";
                          }
                     }
                     break;
 
                
           }
-          Debug.Log(""+startingNum+" "+step+" "+sequence );
-          displayTxt.text = "Закономерность: " + sequence;
+          Debug.Log(""+_startingNum+" "+_step+" "+_sequence );
+          displayTxt.text = "Закономерность: " + _sequence;
      }
      private void Update()
      {
           if (Input.GetKeyDown(KeyCode.Return))
           {
-               if (InputField.text == rightAnswer)
+               if (inputField.text == _rightAnswer)
                {
                     _miniGamesSwitcher.HideMiniGames();
-                    _miniGamesSwitcher.PassedMiniGameID = MyID;
+                    _miniGamesSwitcher.passedMiniGameID = _myID;
                }
                else
                {
                     _miniGamesSwitcher.HideMiniGames();
-                    sequence = "";
+                    _sequence = "";
                }
           }
 
           if (_miniGamesSwitcher.isWaitingAction)
           {
-               MyID = _miniGamesSwitcher.WaitingMiniGameID;
-               sequence = "";
+               _myID = _miniGamesSwitcher.waitingMiniGameID;
+               _sequence = "";
                Generate();
                _miniGamesSwitcher.isWaitingAction = false;
           }

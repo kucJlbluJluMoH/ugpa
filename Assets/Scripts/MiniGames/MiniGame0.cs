@@ -7,14 +7,14 @@ using Random = UnityEngine.Random;
 
 public class MiniGame0 : MonoBehaviour
 {
-    private int MyId;
-    private String rightAnswer;
+    private int _myId;
+    private String _rightAnswer;
     public TMP_InputField tmpInputFiled;
     public TextMeshProUGUI sequnceTxt;
     
     private MiniGamesSwitcher _miniGamesSwitcher;
     // Шифр для цифр от 1 до 6
-    private static readonly Dictionary<int, string> cipher = new Dictionary<int, string>
+    private static readonly Dictionary<int, string> Cipher = new Dictionary<int, string>
     {
         { 1, "00100" },
         { 2, "01001" },
@@ -34,16 +34,16 @@ public class MiniGame0 : MonoBehaviour
         
         if (_miniGamesSwitcher.isWaitingAction)
         {
-            MyId = _miniGamesSwitcher.WaitingMiniGameID;
+            _myId = _miniGamesSwitcher.waitingMiniGameID;
             _miniGamesSwitcher.isWaitingAction = false;
             GenerateCode();
         }
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            if (tmpInputFiled.text == rightAnswer)
+            if (tmpInputFiled.text == _rightAnswer)
             {
                 _miniGamesSwitcher.HideMiniGames();
-                _miniGamesSwitcher.PassedMiniGameID = MyId;
+                _miniGamesSwitcher.passedMiniGameID = _myId;
             }
             else
             {
@@ -64,8 +64,8 @@ public class MiniGame0 : MonoBehaviour
         // Выводим результаты в консоль
         // Дешифровка для проверки
         List<int> decryptedSequence = DecryptSequence(encryptedSequence);
-        rightAnswer = string.Join("", decryptedSequence);
-        Debug.Log("Дешифрованная последовательность: " + rightAnswer);
+        _rightAnswer = string.Join("", decryptedSequence);
+        Debug.Log("Дешифрованная последовательность: " + _rightAnswer);
     }
     // Генерирует случайную последовательность цифр
     private List<int> GenerateRandomSequence(int length)
@@ -84,9 +84,9 @@ public class MiniGame0 : MonoBehaviour
         string encrypted = "";
         foreach (var number in sequence)
         {
-            if (cipher.ContainsKey(number))
+            if (Cipher.ContainsKey(number))
             {
-                encrypted += cipher[number];
+                encrypted += Cipher[number];
             }
             else
             {
@@ -107,7 +107,7 @@ public class MiniGame0 : MonoBehaviour
             string chunk = encryptedSequence.Substring(i, 5);
             int number = -1;
 
-            foreach (var kvp in cipher)
+            foreach (var kvp in Cipher)
             {
                 if (kvp.Value == chunk)
                 {

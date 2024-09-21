@@ -2,20 +2,21 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class MiniGame1 : MonoBehaviour
 {
-	private int MyID;
-	public ButtonTrans RED;
-	public ButtonTrans GREEN;
-	public ButtonTrans BLUE;
-	public GameObject ShowSequenceButton;
+	private int _myID;
+	[FormerlySerializedAs("RED")] public ButtonTrans red;
+	[FormerlySerializedAs("GREEN")] public ButtonTrans green;
+	[FormerlySerializedAs("BLUE")] public ButtonTrans blue;
+	[FormerlySerializedAs("ShowSequenceButton")] public GameObject showSequenceButton;
 	public Image colorDisplay; // Ссылка на компонент Image в UI
-	private float Delay = 0.3f;
-	private string correctSequence;
-	private string inputSequence ="";
-	private int sequenceLength=5;
+	private float _delay = 0.3f;
+	private string _correctSequence;
+	private string _inputSequence ="";
+	private int _sequenceLength=5;
 	private MiniGamesSwitcher _miniGamesSwitcher;
 	private void Start()
 	{
@@ -37,7 +38,7 @@ public class MiniGame1 : MonoBehaviour
 
 	private IEnumerator DisplayColorSequence()
 	{
-		foreach (char colorChar in correctSequence)
+		foreach (char colorChar in _correctSequence)
 		{
 			// Изменяем цвет отображения в зависимости от символа
 			switch (colorChar)
@@ -54,18 +55,18 @@ public class MiniGame1 : MonoBehaviour
 			}
 
 			// Делаем паузу перед переходом к следующему цвету
-			yield return new WaitForSeconds(Delay);
+			yield return new WaitForSeconds(_delay);
 			colorDisplay.color = Color.black;
-			yield return new WaitForSeconds(Delay);
+			yield return new WaitForSeconds(_delay);
 		}
 	}
 
 	public void GenerateSequence()
 	{
 		_miniGamesSwitcher.isWaitingAction = false;
-		ShowSequenceButton.SetActive(false);
-		correctSequence = GenerateRandomColorSequence(sequenceLength);
-		Debug.Log("Сгенерированная последовательность: " + correctSequence);
+		showSequenceButton.SetActive(false);
+		_correctSequence = GenerateRandomColorSequence(_sequenceLength);
+		Debug.Log("Сгенерированная последовательность: " + _correctSequence);
         
 		// Запускаем корутину, чтобы показать цвета
 		StartCoroutine(DisplayColorSequence());
@@ -75,25 +76,25 @@ public class MiniGame1 : MonoBehaviour
 	{
 		if (_miniGamesSwitcher.isWaitingAction)
 		{
-			MyID = _miniGamesSwitcher.WaitingMiniGameID;
-			RED.Clicked();
-			GREEN.Clicked();
-			BLUE.Clicked();
-			ShowSequenceButton.SetActive(true);
+			_myID = _miniGamesSwitcher.waitingMiniGameID;
+			red.Clicked();
+			green.Clicked();
+			blue.Clicked();
+			showSequenceButton.SetActive(true);
 			_miniGamesSwitcher.isWaitingAction = false;
 		}
-		if (inputSequence!=""&&inputSequence.Length!=0)
+		if (_inputSequence!=""&&_inputSequence.Length!=0)
 		{
-			if (inputSequence.Length == sequenceLength)
+			if (_inputSequence.Length == _sequenceLength)
 			{
-				if (correctSequence == inputSequence)
+				if (_correctSequence == _inputSequence)
 				{
 					_miniGamesSwitcher.HideMiniGames();
-					_miniGamesSwitcher.PassedMiniGameID = MyID;
+					_miniGamesSwitcher.passedMiniGameID = _myID;
 				}
 				else
 				{
-					inputSequence = "";
+					_inputSequence = "";
 					_miniGamesSwitcher.HideMiniGames();
 				}
 			}
@@ -103,10 +104,10 @@ public class MiniGame1 : MonoBehaviour
 
 	public void Red()
 	{
-		inputSequence += "0";
+		_inputSequence += "0";
 	}
 	public void Green()
-	{inputSequence += "1";}
+	{_inputSequence += "1";}
 	public void Blue()
-	{inputSequence += "2";}
+	{_inputSequence += "2";}
 }

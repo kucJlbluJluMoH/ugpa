@@ -630,7 +630,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 0
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -649,7 +649,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: IsWaitingAfterSuperAttack
+    attribute: isWaitingAfterSuperAttack
     path: 
     classID: 114
     script: {fileID: 11500000, guid: cf6fb7e21a034bf49a96bc3da13fe2df, type: 3}
@@ -799,7 +799,7 @@ AnimationClip:
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
       path: 0
-      attribute: 2565103235
+      attribute: 684331103
       script: {fileID: 11500000, guid: cf6fb7e21a034bf49a96bc3da13fe2df, type: 3}
       typeID: 114
       customType: 0
@@ -2895,7 +2895,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 0
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -2914,7 +2914,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: IsWaitingAfterSuperAttack
+    attribute: isWaitingAfterSuperAttack
     path: 
     classID: 114
     script: {fileID: 11500000, guid: cf6fb7e21a034bf49a96bc3da13fe2df, type: 3}

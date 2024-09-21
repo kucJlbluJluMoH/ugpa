@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 public class PlayerMovement : MonoBehaviour
 {
@@ -13,33 +14,33 @@ public class PlayerMovement : MonoBehaviour
     public float dashDuration = 0.2f;
     public float dashCooldown = 1.0f;
     public bool isGrounded;
-    [Header("HP")]
-    public TextMeshProUGUI HP_TXT;
-    public float HP = 100f;
-    public float maxHP = 100f;
+    [FormerlySerializedAs("HP_TXT")] [Header("HP")]
+    public TextMeshProUGUI hpTxt;
+    [FormerlySerializedAs("HP")] public float hp = 100f;
+    [FormerlySerializedAs("maxHP")] public float maxHp = 100f;
     public float regenAmount = 5f;
     public float regenInterval = 1f;
     public float regenDelay = 5f;
 
-    private float lastDamageTime;
-    private bool isRegenerating;
-    private CharacterController controller;
-    private Vector3 velocity;
-    private bool isDashing = false;
-    private float lastDashTime;
-    private Transform cameraTransform;
-    private CameraController cameraController;
+    private float _lastDamageTime;
+    private bool _isRegenerating;
+    private CharacterController _controller;
+    private Vector3 _velocity;
+    private bool _isDashing = false;
+    private float _lastDashTime;
+    private Transform _cameraTransform;
+    private CameraController _cameraController;
     void Start()
     {
-        lastDamageTime = Time.time;
-        isRegenerating = false;
-        controller = GetComponent<CharacterController>();
-        cameraTransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
-        cameraController = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
+        _lastDamageTime = Time.time;
+        _isRegenerating = false;
+        _controller = GetComponent<CharacterController>();
+        _cameraTransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        _cameraController = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
     }
     void Update()
     {
-        if (!cameraController.IsPaused)
+        if (!_cameraController.isPaused)
         {
             if (Input.GetButtonDown("Use"))
             {
@@ -47,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
                 RaycastHit hit;
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-                if (Physics.Raycast(ray, out hit,cameraController.raycastDistance, ~cameraController.ignoreLayer))
+                if (Physics.Raycast(ray, out hit,_cameraController.raycastDistance, ~_cameraController.ignoreLayer))
                 {
                     
                     // Проверяем, попадает ли объект с именем "DoorInteracted"
@@ -60,33 +61,33 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
 
-            isGrounded = controller.isGrounded;
-            if (isGrounded && velocity.y < 0)
+            isGrounded = _controller.isGrounded;
+            if (isGrounded && _velocity.y < 0)
             {
-                velocity.y = -2f;
+                _velocity.y = -2f;
             }
-            if (!isDashing)
+            if (!_isDashing)
             {
                 float moveX = Input.GetAxis("Horizontal");
                 float moveZ = Input.GetAxis("Vertical");
                 Vector3 move = transform.right * moveX + transform.forward * moveZ;
-                controller.Move(move * speed * Time.deltaTime);
+                _controller.Move(move * speed * Time.deltaTime);
                 if (Input.GetButtonDown("Jump") && isGrounded)
                 {
-                    velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+                    _velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
                 }
-                if (Input.GetKeyDown(KeyCode.LeftShift) && (moveX != 0 || moveZ != 0) && Time.time >= lastDashTime + dashCooldown)
+                if (Input.GetKeyDown(KeyCode.LeftShift) && (moveX != 0 || moveZ != 0) && Time.time >= _lastDashTime + dashCooldown)
                 {
                     StartCoroutine(Dash(move));
                 }
             }
-            velocity.y += gravity * Time.deltaTime;
-            controller.Move(velocity * Time.deltaTime);
-            if (Time.time - lastDamageTime >= regenDelay && !isRegenerating)
+            _velocity.y += gravity * Time.deltaTime;
+            _controller.Move(_velocity * Time.deltaTime);
+            if (Time.time - _lastDamageTime >= regenDelay && !_isRegenerating)
             {
-                StartCoroutine(RegenerateHP());
+                StartCoroutine(RegenerateHp());
             }
-            HP_TXT.text = "[ " + HP + " ]";
+            hpTxt.text = "[ " + hp + " ]";
         }
 
     }
@@ -96,35 +97,35 @@ public class PlayerMovement : MonoBehaviour
     }
     public void TakeDamaage(float damage)
     {
-        HP -= damage;
-        lastDamageTime = Time.time;
-        if (isRegenerating)
+        hp -= damage;
+        _lastDamageTime = Time.time;
+        if (_isRegenerating)
         {
-            StopCoroutine(RegenerateHP());
-            isRegenerating = false;
+            StopCoroutine(RegenerateHp());
+            _isRegenerating = false;
         }
     }
     private IEnumerator Dash(Vector3 direction)
     {
-        isDashing = true;
-        lastDashTime = Time.time; // Обновляем время последнего рывка
+        _isDashing = true;
+        _lastDashTime = Time.time; // Обновляем время последнего рывка
         float startTime = Time.time;
         while (Time.time < startTime + dashDuration)
         {
-            controller.Move(direction * dashSpeed * Time.deltaTime);
+            _controller.Move(direction * dashSpeed * Time.deltaTime);
             yield return null;
         }
-        isDashing = false;
+        _isDashing = false;
     }
-    private IEnumerator RegenerateHP()
+    private IEnumerator RegenerateHp()
     {
-        isRegenerating = true;
-        while (HP < maxHP && Time.time - lastDamageTime >= regenDelay)
+        _isRegenerating = true;
+        while (hp < maxHp && Time.time - _lastDamageTime >= regenDelay)
         {
-            HP += regenAmount;
-            if (HP > maxHP) HP = maxHP;
+            hp += regenAmount;
+            if (hp > maxHp) hp = maxHp;
             yield return new WaitForSeconds(regenInterval);
         }
-        isRegenerating = false;
+        _isRegenerating = false;
     }
 }

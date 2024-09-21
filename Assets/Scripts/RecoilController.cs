@@ -11,28 +11,28 @@ public class RecoilController : MonoBehaviour
     public float recoilRandomness = 2f;   // Случайность отдачи
 
     // Приватные переменные
-    private Vector3 currentRecoil;
-    private Vector3 targetRecoil;
+    private Vector3 _currentRecoil;
+    private Vector3 _targetRecoil;
 
     void FixedUpdate()
     {
         // Плавно возвращаем отдачу к нулю
-        if (currentRecoil.magnitude > 0.01f)
+        if (_currentRecoil.magnitude > 0.01f)
         {
-            currentRecoil = Vector3.Lerp(currentRecoil, Vector3.zero, recoilSpeed * Time.fixedDeltaTime);
-            transform.localRotation = Quaternion.Euler(currentRecoil);
+            _currentRecoil = Vector3.Lerp(_currentRecoil, Vector3.zero, recoilSpeed * Time.fixedDeltaTime);
+            transform.localRotation = Quaternion.Euler(_currentRecoil);
         }
     }
 
     // Вызываем метод при стрельбе
-    public void AddRecoil(int Strength)
+    public void AddRecoil(int strength)
     {
         // Вычисляем случайную величину отдачи
         float recoilXRandom = Random.Range(-recoilRandomness, recoilRandomness);
         float recoilYRandom = Random.Range(-recoilRandomness, recoilRandomness);
 
         // Устанавливаем целевую отдачу
-        targetRecoil = new Vector3(-Strength + recoilYRandom, recoilX + recoilXRandom, recoilZ);
-        currentRecoil = targetRecoil;
+        _targetRecoil = new Vector3(-strength + recoilYRandom, recoilX + recoilXRandom, recoilZ);
+        _currentRecoil = _targetRecoil;
     }
 }

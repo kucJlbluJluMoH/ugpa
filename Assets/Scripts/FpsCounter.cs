@@ -7,23 +7,23 @@ public class FpsCounter : MonoBehaviour
 {
     // Start is called before the first frame update
     public TextMeshProUGUI fpstxt;
-    private float pollingTime = 0.1f; // Îáíîâëÿòü çíà÷åíèå FPS êàæäóþ ñåêóíäó
-    private float timePassed;
-    private int frameCount;
+    private float _pollingTime = 0.1f; // ÐžÐ±Ð½Ð¾Ð²Ð»ÑÑ‚ÑŒ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ FPS ÐºÐ°Ð¶Ð´ÑƒÑŽ ÑÐµÐºÑƒÐ½Ð´Ñƒ
+    private float _timePassed;
+    private int _frameCount;
 
     void Update()
     {
-        // Ïîäñ÷åò FPS
-        timePassed += Time.deltaTime;
-        frameCount++;
+        // ÐŸÐ¾Ð´ÑÑ‡ÐµÑ‚ FPS
+        _timePassed += Time.deltaTime;
+        _frameCount++;
 
-        if (timePassed >= pollingTime)
+        if (_timePassed >= _pollingTime)
         {
-            int fps = Mathf.RoundToInt(frameCount / timePassed);
+            int fps = Mathf.RoundToInt(_frameCount / _timePassed);
             fpstxt.text = ""+fps;
 
-            frameCount = 0;
-            timePassed -= pollingTime;
+            _frameCount = 0;
+            _timePassed -= _pollingTime;
         }
     }
     

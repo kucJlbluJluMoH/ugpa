@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-public class spawn : MonoBehaviour
+public class Spawn : MonoBehaviour
 {
     // Префаб, который будет спавниться
     public GameObject prefabToSpawn;

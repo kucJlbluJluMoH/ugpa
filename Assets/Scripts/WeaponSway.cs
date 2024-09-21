@@ -3,6 +3,7 @@ public class WeaponSway : MonoBehaviour
 {
     public float smoothness = 5.0f; // Чем выше значение, тем быстрее оружие будет возвращаться в исходное положение
     public float swayAmount = 0.05f; // Определяет, насколько сильно оружие будет отклоняться
+    
     private CameraController _cameraController;
     private MiniGamesSwitcher _miniGamesSwitcher;
     void Start()
@@ -12,7 +13,7 @@ public class WeaponSway : MonoBehaviour
     }
     void Update()
     {
-        if (!_cameraController.IsPaused || !_miniGamesSwitcher.isInGame )
+        if (!_cameraController.isPaused || !_miniGamesSwitcher.isInGame )
         {
             // Получаем движение мыши по осям X и Y
             float mouseX = Input.GetAxisRaw("Mouse X") * swayAmount;

@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.UI;
+using UnityEngine.Serialization;
+using UnityEngine.UI;    
 
 public class Developermenu : MonoBehaviour
 {
@@ -19,10 +20,11 @@ public class Developermenu : MonoBehaviour
     public Image deathlessImage;
     public Image openAllDoorsImage;
 
-    public int ForceDoorIDOpen=-1;
+    [FormerlySerializedAs("ForceDoorIDOpen")] public int forceDoorIDOpen=-1;
     public bool isOpennedAllDoors = false;
     public bool isFreezed = false;
     public bool isKilledEverybody  = false;
+    
     void Start()
     {
         developerMenu.SetActive(false);
@@ -38,17 +40,31 @@ public class Developermenu : MonoBehaviour
             {
                 Time.timeScale = 1;
                 blurUI.SetActive(false);
-                camera.IsPaused = false;
+                camera.isPaused = false;
                 camera.LockCursor();
 
             }
             else
             {
-                camera.IsPaused = true;
+                camera.isPaused = true;
                 Time.timeScale = 0;
                 blurUI.SetActive(true);
                 camera.UnlockCursor();
             }
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+
+            if (developerMenu.activeSelf)
+            {
+                developerMenu.SetActive(false);
+                Time.timeScale = 1;
+                blurUI.SetActive(false);
+                camera.isPaused = false;
+                camera.LockCursor();
+
+            }
+            
         }
         
     }
@@ -61,11 +77,8 @@ public class Developermenu : MonoBehaviour
             Color currentColor = killEverybodyImage.color;
             currentColor.a = 0.6f; // Change this value based on your needs
             killEverybodyImage.color = currentColor; // Apply the updated color
-        }
-        else
-        {
             isKilledEverybody = false;
-            Color currentColor = killEverybodyImage.color;
+
             currentColor.a = 1; // Change this value based on your needs
             killEverybodyImage.color = currentColor; // Apply the updated color
         }
@@ -107,18 +120,18 @@ public class Developermenu : MonoBehaviour
     }
     public void Deathless()
     {
-        if (playerMovement.HP<=100)
+        if (playerMovement.hp<=100)
         {
-            playerMovement.HP = 100000;
-            playerMovement.maxHP = 100000;
+            playerMovement.hp = 100000;
+            playerMovement.maxHp = 100000;
             Color currentColor = deathlessImage.color;
             currentColor.a = 0.6f; // Change this value based on your needs
             deathlessImage.color = currentColor; // Apply the updated color
         }
         else
         {
-            playerMovement.HP = 100;
-            playerMovement.maxHP = 100;
+            playerMovement.hp = 100;
+            playerMovement.maxHp = 100;
             Color currentColor = deathlessImage.color;
             currentColor.a = 1; // Change this value based on your needs
             deathlessImage.color = currentColor; // Apply the updated color
@@ -140,10 +153,11 @@ public class Developermenu : MonoBehaviour
             currentColor.a = 1; // Change this value based on your needs
             openAllDoorsImage.color = currentColor; // Apply the updated color
         }
+
     }
     public void OpenCurrentDoor()
     {
-        ForceDoorIDOpen = miniGamesSwitcher.MaxIdOfOppenedDoor + 1;
+        forceDoorIDOpen = miniGamesSwitcher.maxIdOfOppenedDoor + 1;
     }
 
     public void GetLogs()
