@@ -17,6 +17,14 @@ public class CameraController : MonoBehaviour
     private Vector2 _currentRecoil = Vector2.zero;  // Текущая отдача
     float _xRotation;
     float _yRotation;
+
+    public static CameraController Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     public void LockCursor()
     {
         Cursor.visible = false;

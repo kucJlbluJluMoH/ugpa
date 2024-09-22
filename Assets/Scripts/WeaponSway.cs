@@ -4,13 +4,9 @@ public class WeaponSway : MonoBehaviour
     public float smoothness = 5.0f; // Чем выше значение, тем быстрее оружие будет возвращаться в исходное положение
     public float swayAmount = 0.05f; // Определяет, насколько сильно оружие будет отклоняться
     
-    private CameraController _cameraController;
-    private MiniGamesSwitcher _miniGamesSwitcher;
-    void Start()
-    {
-        _cameraController = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
-        _miniGamesSwitcher = GameObject.Find("MiniGamesCanvas").GetComponent<MiniGamesSwitcher>();
-    }
+    private CameraController _cameraController => CameraController.Instance;
+    private MiniGamesSwitcher _miniGamesSwitcher => MiniGamesSwitcher.Instance;
+
     void Update()
     {
         if (!_cameraController.isPaused || !_miniGamesSwitcher.isInGame )

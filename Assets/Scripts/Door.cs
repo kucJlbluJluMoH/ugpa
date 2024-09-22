@@ -9,15 +9,13 @@ public class Door : MonoBehaviour
     [FormerlySerializedAs("Open")] public AudioClip open;
     [FormerlySerializedAs("Close")] public AudioClip close;
     private Animator _animator;
-    private Developermenu _developermenu;
+    private Developermenu _developermenu => Developermenu.Instance;
     private AudioSource _audioSource;
     private bool _isOpened = false;
-    private MiniGamesSwitcher _miniGamesSwitcher;
+    private MiniGamesSwitcher _miniGamesSwitcher => MiniGamesSwitcher.Instance;
     private bool _isWaintingToOpen;
     void Start()
     {
-        _miniGamesSwitcher = GameObject.Find("MiniGamesCanvas").GetComponent<MiniGamesSwitcher>();
-        _developermenu = GameObject.Find("DeveloperMenuController").GetComponent<Developermenu>();
         _audioSource = GetComponent<AudioSource>();
         _animator = GetComponent<Animator>();
 

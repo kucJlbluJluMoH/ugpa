@@ -17,13 +17,7 @@ public class MiniGame1 : MonoBehaviour
 	private string _correctSequence;
 	private string _inputSequence ="";
 	private int _sequenceLength=5;
-	private MiniGamesSwitcher _miniGamesSwitcher;
-	private void Start()
-	{
-		// Генерируем случайную последовательность _miniGamesSwitcher = GameObject.Find("MiniGamesCanvas").GetComponent<MiniGamesSwitcher>();
-		_miniGamesSwitcher = GameObject.Find("MiniGamesCanvas").GetComponent<MiniGamesSwitcher>();
-		
-	}
+	private MiniGamesSwitcher _miniGamesSwitcher => MiniGamesSwitcher.Instance;
 
 	private string GenerateRandomColorSequence(int length)
 	{

@@ -43,7 +43,7 @@ public class BlasterController : MonoBehaviour
     private bool _isBlinking = false;
     private bool _isHoldingLkm = false;
     private bool _isVisibleBlink = true;
-    private CameraController _cameraController;
+    private CameraController _cameraController => CameraController.Instance;
     float _delay = 0;
     float _delayBigstvol = 0;
     private Animator _anim;
@@ -56,7 +56,6 @@ public class BlasterController : MonoBehaviour
     {
         _multiplierStep = (1 - _multiplier) * 0.1f / holdTime;
         _recoilController = GetComponent<RecoilController>();
-        _cameraController = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
         _player = GameObject.FindGameObjectWithTag("Player");
         _anim = GetComponent<Animator>();
         StartCoroutine(Delay());

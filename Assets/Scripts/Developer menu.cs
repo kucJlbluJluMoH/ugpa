@@ -11,7 +11,7 @@ public class Developermenu : MonoBehaviour
     public GameObject developerMenu;
     public GameObject spawn;
 
-    public MiniGamesSwitcher miniGamesSwitcher;
+    public MiniGamesSwitcher miniGamesSwitcher => MiniGamesSwitcher.Instance;
     public CameraController camera;
     public PlayerMovement playerMovement;
     public Image spawnImage;
@@ -24,11 +24,17 @@ public class Developermenu : MonoBehaviour
     public bool isOpennedAllDoors = false;
     public bool isFreezed = false;
     public bool isKilledEverybody  = false;
-    
+
+    public static Developermenu Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     void Start()
     {
         developerMenu.SetActive(false);
-        miniGamesSwitcher = GameObject.Find("MiniGamesCanvas").GetComponent<MiniGamesSwitcher>();
     }
     
     void Update()

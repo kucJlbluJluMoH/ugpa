@@ -10,13 +10,12 @@ public class MiniGame4 : MonoBehaviour
 	public List<GameObject> positionsForRandomShuffle;
 	[FormerlySerializedAs("PuzzlePieces")] public List<GameObject> puzzlePieces;
 	public bool _isDragging;
-	private MiniGamesSwitcher _miniGamesSwitcher;
+	private MiniGamesSwitcher _miniGamesSwitcher => MiniGamesSwitcher.Instance;
 	private int _previusClickedID=-1;
 	private int _myID;
 	protected int _rightPlaces = 0;
 	private void Start()
 	{
-		_miniGamesSwitcher = GameObject.Find("MiniGamesCanvas").GetComponent<MiniGamesSwitcher>();
 		Shuffle();
 	}
 
