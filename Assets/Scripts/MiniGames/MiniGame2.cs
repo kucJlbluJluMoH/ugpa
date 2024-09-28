@@ -14,8 +14,6 @@ public class MiniGame2 : MonoBehaviour
      public TextMeshProUGUI displayTxt;
      [FormerlySerializedAs("InputField")] public TMP_InputField inputField;
      
-     
-     
      private String _rightAnswer;
      private int _myID;
      private int _startingNum;

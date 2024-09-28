@@ -1298,11 +1298,10 @@ MonoBehaviour:
   superAttackRangeToDamage: 3
   superAttackRangeToStart: 14
   superAttackCooldown: 10
-  afterSuperAttackDelay: 1
   superAttackTimeToStayIn: 2
   superAttackTimeToContinue: 1
   maxDurationOfSuperAttack: 4
-  probabilityOfSuperAttack: 20
+  probabilityOfSuperAttack: 100
   superMovingThreshold: 2
   isSuperAttacking: 0
   isReadyToMove: 0

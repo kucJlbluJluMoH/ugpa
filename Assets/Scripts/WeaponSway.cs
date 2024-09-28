@@ -13,19 +13,16 @@ public class WeaponSway : MonoBehaviour
     }
     void Update()
     {
-        if (!_cameraController.isPaused || !_miniGamesSwitcher.isInGame )
+        if (!_cameraController.isPaused || !_miniGamesSwitcher.isInGame)
         {
-            // Получаем движение мыши по осям X и Y
             float mouseX = Input.GetAxisRaw("Mouse X") * swayAmount;
+
             float mouseY = Input.GetAxisRaw("Mouse Y") * swayAmount;
             // Рассчитываем новое положение оружия
             Quaternion rotationX = Quaternion.AngleAxis(-mouseY, Vector3.right);
             Quaternion rotationY = Quaternion.AngleAxis(mouseX, Vector3.up);
             Quaternion targetRotaion = rotationX * rotationY;
-
-            transform.localRotation =
-                Quaternion.Slerp(transform.localRotation, targetRotaion, smoothness * Time.deltaTime);
-
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotaion, smoothness * Time.deltaTime);
         }
     }
 }

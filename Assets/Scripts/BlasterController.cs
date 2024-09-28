@@ -93,6 +93,7 @@ public class BlasterController : MonoBehaviour
             GameObject currentBullet = Instantiate(bigBullet, spawnBullet.position, spawnBullet.rotation);
             currentBullet.GetComponent<Rigidbody>().AddForce(dirwithspread.normalized * shootBigForce, ForceMode.Impulse);
             _anim.SetTrigger("DecreaseEmis");
+            _anim.SetTrigger("Shot");
             _cameraController.recoilStrength = bigRecoilCam;
             _cameraController.ApplyRecoil();
             _recoilController.AddRecoil(10);
@@ -119,10 +120,12 @@ public class BlasterController : MonoBehaviour
             // Создаем пулю и задаем её начальную ориентацию как у объекта spawnBullet
             GameObject currentBullet = Instantiate(smallBullet, spawnBullet.position, spawnBullet.rotation);
             currentBullet.GetComponent<Rigidbody>().AddForce(dirwithspread.normalized * shootForce, ForceMode.Impulse);
+            _anim.SetTrigger("Shot");
             _delay = delayAfterSmallShot;
             _cameraController.recoilStrength = smallRecoilCam;
             _cameraController.ApplyRecoil();
             _recoilController.AddRecoil(2);
+
             //plmove.currentRecoil += recoilSmallAmount;
         }
 
@@ -193,6 +196,7 @@ public class BlasterController : MonoBehaviour
     {
         if (!_cameraController.isPaused)
         {
+            _anim.SetBool("IsAiming",_isAiming);
 
             if (Input.GetMouseButtonDown(0) && _currentstvol == 0)
             {
@@ -235,11 +239,20 @@ public class BlasterController : MonoBehaviour
             {
                 transform.position = Vector3.Lerp(transform.position, syncIdleTr.position, Time.deltaTime * aimSpeed);
                 _isAiming = false;
+                
             }
 
             if (Input.GetButtonDown("SwitchStvol") && !_isHoldingLkm)
             {
-                _anim.SetTrigger("Change");
+                if (_currentstvol == 1)
+                {
+                    _anim.SetBool("IsBig",false);    
+                }
+                else
+                {
+                    _anim.SetBool("IsBig",true);
+                }
+                
                 _delay = 0.5f;
                 _currentstvol = Mathf.Abs(_currentstvol - 1);
 

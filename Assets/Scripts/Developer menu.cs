@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class Developermenu : MonoBehaviour
 {
+    public GameObject pauseMenu;
     public GameObject blurUI;
     public GameObject developerMenu;
     public GameObject spawn;
@@ -38,12 +39,18 @@ public class Developermenu : MonoBehaviour
             developerMenu.SetActive(!developerMenu.activeSelf);
             if (!developerMenu.activeSelf)
             {
-                Time.timeScale = 1;
-                blurUI.SetActive(false);
-                camera.isPaused = false;
-                camera.LockCursor();
-
+                
+                developerMenu.SetActive(false);
+                if (!pauseMenu.activeSelf)
+                {
+                    Time.timeScale = 1;
+                    blurUI.SetActive(false);
+                    camera.isPaused = false;
+                    camera.LockCursor();
+                }
             }
+
+            
             else
             {
                 camera.isPaused = true;
@@ -52,20 +59,7 @@ public class Developermenu : MonoBehaviour
                 camera.UnlockCursor();
             }
         }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
 
-            if (developerMenu.activeSelf)
-            {
-                developerMenu.SetActive(false);
-                Time.timeScale = 1;
-                blurUI.SetActive(false);
-                camera.isPaused = false;
-                camera.LockCursor();
-
-            }
-            
-        }
         
     }
 

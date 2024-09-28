@@ -265,7 +265,7 @@ public class EnemyController : MonoBehaviour
     }
     void Update()
     {
-        if (hp <= 0 | _developermenu.isKilledEverybody)
+        if (hp <= 0 || _developermenu.isKilledEverybody)
         {
             Destroy(gameObject);
         }
@@ -313,11 +313,10 @@ public class EnemyController : MonoBehaviour
                 }
             }
 
-            if (_agent.avoidancePriority == 100)
+            if (_agent.avoidancePriority >= 50)
             {
                 if ((Vector3.Distance(gameObject.transform.position, _player.position) < superAttackRangeToDamage)&&IsInView())
                 {
-                    Debug.Log("updateLocate");
                     _forceStopSuper = true;
                     _agent.isStopped = true;
                 }

@@ -47,6 +47,8 @@
   <ItemGroup>
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
+    <Compile Include="Assets\ParticleShadersVol1\SampleSceneAssets\Scripts\LightRig.cs" />
+    <Compile Include="Assets\ParticleShadersVol1\SampleSceneAssets\Scripts\CameraRig.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
     <Compile Include="Assets\Scripts\MiniGames\MiniGame0.cs" />
@@ -64,6 +66,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
+    <Compile Include="Assets\ParticleShadersVol1\SampleSceneAssets\Scripts\EMUI_Animations.cs" />
     <Compile Include="Assets\Scripts\WeaponSway.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
@@ -76,10 +79,12 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeB.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexColorCycler.cs" />
+    <Compile Include="Assets\ParticleShadersVol1\SampleSceneAssets\Scripts\GetName.cs" />
     <Compile Include="Assets\Scripts\FpsCounter.cs" />
     <Compile Include="Assets\Scripts\RecoilController.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />
+    <Compile Include="Assets\ParticleShadersVol1\SampleSceneAssets\Scripts\ExamplesController.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
     <Compile Include="Assets\Scripts\spawn.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextConsoleSimulator.cs" />
@@ -88,6 +93,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
     <Compile Include="Assets\Scripts\MiniGames\MiniGame4.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
+    <Compile Include="Assets\ParticleShadersVol1\SampleSceneAssets\Scripts\EMUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
     <Compile Include="Assets\Scripts\Door.cs" />
     <Compile Include="Assets\Scripts\Developer menu.cs" />
@@ -100,6 +106,7 @@
     <Compile Include="Assets\Scripts\BlasterController.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
     <Compile Include="Assets\Scripts\MiniGames\MiniGame3.cs" />
+    <Compile Include="Assets\ParticleShadersVol1\SampleSceneAssets\Scripts\ColorPicker.cs" />
     <Compile Include="Assets\Scripts\SectorsManager.cs" />
     <Compile Include="Assets\Scripts\EnemyFollowCursor.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
@@ -691,13 +698,13 @@
       <Project>{29f08a18-5e12-d937-570d-10fbe15aff04}</Project>
       <Name>Unity.RenderPipelines.Core.Runtime.Player</Name>
     </ProjectReference>
-    <ProjectReference Include="Unity.Burst.Player.csproj">
-      <Project>{a811a211-f809-8ba2-e767-803b0048ea6a}</Project>
-      <Name>Unity.Burst.Player</Name>
-    </ProjectReference>
     <ProjectReference Include="Unity.AI.Navigation.Player.csproj">
       <Project>{edcb8e1f-3a89-2d94-c317-ca970de6b446}</Project>
       <Name>Unity.AI.Navigation.Player</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Burst.Player.csproj">
+      <Project>{a811a211-f809-8ba2-e767-803b0048ea6a}</Project>
+      <Name>Unity.Burst.Player</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.VisualScripting.Core.Player.csproj">
       <Project>{3d8f4931-084b-f167-7d98-d1dbeff893a4}</Project>

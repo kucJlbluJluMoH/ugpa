@@ -127,7 +127,7 @@ public class MiniGame4 : MonoBehaviour
 	    _rightPlaces = 0;
 	    for (int i = 0; i < postions.Count; i++)
 	    {
-			Debug.Log(i);
+
 		    if (puzzlePieces[i].transform.position == postions[i].transform.position)
 		    {
 			    _rightPlaces += 1;
@@ -136,7 +136,7 @@ public class MiniGame4 : MonoBehaviour
 	    }
 		    
 
-
+	    Debug.Log(_rightPlaces);
 	    if (_rightPlaces == 5)
 	    {
 		    return true;
