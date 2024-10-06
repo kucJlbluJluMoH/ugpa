@@ -5,13 +5,12 @@ using UnityEngine.Serialization;
 
 public class SectorsManager : MonoBehaviour
 {
-    private MiniGamesSwitcher _miniGamesSwitcher;
+    private MiniGamesSwitcher _miniGamesSwitcher => MiniGamesSwitcher.Instance;
     private int _maxIndexOppenedDoor = 0;
     [FormerlySerializedAs("Sectors")] public List<GameObject> sectors;
     // Start is called before the first frame update
     void Start()
     {
-        _miniGamesSwitcher = GameObject.Find("MiniGamesCanvas").GetComponent<MiniGamesSwitcher>();
         for (int i =0; i<sectors.Count;i++)
         {
             sectors[i].SetActive(false);

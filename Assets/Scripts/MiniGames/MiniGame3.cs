@@ -12,12 +12,7 @@ public class MiniGame3 : MonoBehaviour
     private int _timeLeft = 30;
     private int _coins;
     private int _myID;
-    private MiniGamesSwitcher _miniGamesSwitcher;
-    private void Start()
-    {
-        _miniGamesSwitcher = GameObject.Find("MiniGamesCanvas").GetComponent<MiniGamesSwitcher>();
-
-    }
+    private MiniGamesSwitcher _miniGamesSwitcher => MiniGamesSwitcher.Instance;
 
     public void Clicked()
     {

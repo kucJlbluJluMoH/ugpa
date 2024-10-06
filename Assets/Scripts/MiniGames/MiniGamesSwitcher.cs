@@ -32,6 +32,14 @@ public class MiniGamesSwitcher : MonoBehaviour
     [FormerlySerializedAs("PassedMiniGameID")] public int passedMiniGameID=-1;
     [FormerlySerializedAs("MaxIdOfOppenedDoor")] public int maxIdOfOppenedDoor = -1;
     private List<GameObject> _miniGames;
+
+    public static MiniGamesSwitcher Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
      void Start()
     {
         _miniGames = new List<GameObject>()

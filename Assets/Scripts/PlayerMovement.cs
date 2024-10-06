@@ -28,15 +28,12 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 _velocity;
     private bool _isDashing = false;
     private float _lastDashTime;
-    private Transform _cameraTransform;
-    private CameraController _cameraController;
+    private CameraController _cameraController => CameraController.Instance;
     void Start()
     {
         _lastDamageTime = Time.time;
         _isRegenerating = false;
         _controller = GetComponent<CharacterController>();
-        _cameraTransform = GameObject.FindGameObjectWithTag("MainCamera").transform;
-        _cameraController = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
     }
     void Update()
     {

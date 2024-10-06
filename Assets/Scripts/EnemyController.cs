@@ -61,10 +61,9 @@ public class EnemyController : MonoBehaviour
     private PlayerMovement _playerMovement;
     private NavMeshAgent _agent;
     private Animator _animator;
-    private Developermenu _developermenu;
+    private Developermenu _developermenu => Developermenu.Instance;
     void Start()
     {
-        _developermenu = GameObject.Find("DeveloperMenuController").GetComponent<Developermenu>();
         _maxCountOfDurationOfSuperAttack = (int)(maxDurationOfSuperAttack / 0.1f);
         _maxCountOfTimeSuperAttackTimeToContinue = (int)(superAttackTimeToContinue / 0.1f);
         _maxCountOfVisiblity = (int)(superAttackTimeToStayIn / 0.1f);

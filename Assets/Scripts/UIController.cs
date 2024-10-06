@@ -23,7 +23,7 @@ public class UIController : MonoBehaviour
     public Slider slider;
     public GameObject crosshair;
     private PlayerMovement _playerMovement;
-    private CameraController _camera;
+    private CameraController _camera => CameraController.Instance;
     private float _currentAlpha = 0f; // ������� ��������������
 
 
@@ -42,7 +42,6 @@ public class UIController : MonoBehaviour
 
         dedEffectobj.SetActive(false);
         _playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
-        _camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
         // ������������� �������� �������� �� ���������
         slider.value = 400;
         // �������� ������ ��� ������

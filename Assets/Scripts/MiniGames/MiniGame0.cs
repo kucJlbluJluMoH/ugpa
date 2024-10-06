@@ -12,7 +12,7 @@ public class MiniGame0 : MonoBehaviour
     public TMP_InputField tmpInputFiled;
     public TextMeshProUGUI sequnceTxt;
     
-    private MiniGamesSwitcher _miniGamesSwitcher;
+    private MiniGamesSwitcher _miniGamesSwitcher => MiniGamesSwitcher.Instance;
     // Шифр для цифр от 1 до 6
     private static readonly Dictionary<int, string> Cipher = new Dictionary<int, string>
     {
@@ -23,11 +23,6 @@ public class MiniGame0 : MonoBehaviour
         { 5, "00010" },
         { 6, "01011" }
     };
-
-    private void Start()
-    {
-        _miniGamesSwitcher = GameObject.Find("MiniGamesCanvas").GetComponent<MiniGamesSwitcher>();
-    }
 
     private void Update()
     {

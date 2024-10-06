@@ -20,12 +20,7 @@ public class MiniGame2 : MonoBehaviour
      private int _missingIndex;
      private int _step;
      private String _sequence="";
-     private MiniGamesSwitcher _miniGamesSwitcher;
-     private void Start()
-     {
-          _miniGamesSwitcher = GameObject.Find("MiniGamesCanvas").GetComponent<MiniGamesSwitcher>();
-
-     }
+     private MiniGamesSwitcher _miniGamesSwitcher => MiniGamesSwitcher.Instance;
 
      private void Generate()
      {
